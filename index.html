@@ -5,18 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>자기소개표 생성기</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <!-- html2canvas 대신 dom-to-image 라이브러리 사용 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <style>
-        /* Tailwind 기본 스타일 오버라이딩 - HTML2Canvas 텍스트 렌더링 개선 */
-        img {
-            display: inline-block;
-        }
-        
-        /* html2canvas 렌더링 개선을 위한 추가 스타일 */
-        #profileCard * {
-            text-rendering: geometricPrecision;
-        }
-        
         /* 태그 관련 스타일 */
         #profileTags {
             display: flex;
@@ -800,39 +791,63 @@
             showStatusMessage('미리보기가 업데이트되었습니다!', 'blue');
         }
 
-        // 이미지 저장 기능
+        // dom-to-image 라이브러리를 사용한 이미지 저장 함수
         function downloadImage() {
             const profileCard = document.getElementById('profileCard');
             showStatusMessage("이미지 생성 중...", 'green');
             
-            html2canvas(profileCard, {
-                backgroundColor: "#ffffff",
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                letterRendering: true,
-                allowTaint: true,
-                onclone: function(clonedDoc) {
-                    // 태그 요소의 패딩 조정
-                    clonedDoc.querySelectorAll('.tag-item').forEach(el => {
-                        el.style.paddingTop = '4px';
-                        el.style.paddingBottom = '0px';
-                    });
+            // 원본 높이를 저장 (결과 이미지가 잘리지 않도록)
+            const originalHeight = profileCard.offsetHeight;
+            
+            // dom-to-image 설정
+            const options = {
+                quality: 1.0,
+                bgcolor: '#fff',
+                style: {
+                  'font-smooth': 'always',
+                  'text-rendering': 'optimizeLegibility'
+                },
+                filter: (node) => {
+                    // 숨겨진 요소 제외
+                    return !node.classList || !node.classList.contains('hidden');
                 }
-            }).then(canvas => {
-                const image = canvas.toDataURL("image/png");
-                const downloadLink = document.createElement('a');
-                downloadLink.href = image;
-                downloadLink.download = "자기소개표.png";
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-                
-                showStatusMessage("이미지로 저장되었습니다!", 'green');
-            }).catch(error => {
-                console.error("이미지 생성 오류:", error);
-                showStatusMessage("이미지 생성 중 오류가 발생했습니다.", 'red');
-            });
+            };
+            
+            // PNG 이미지 생성
+            domtoimage.toPng(profileCard, options)
+                .then(function(dataUrl) {
+                    // 다운로드 링크 생성
+                    const link = document.createElement('a');
+                    link.download = '자기소개표.png';
+                    link.href = dataUrl;
+                    link.click();
+                    
+                    showStatusMessage("이미지로 저장되었습니다!", 'green');
+                })
+                .catch(function(error) {
+                    console.error('이미지 생성 중 오류:', error);
+                    
+                    // 오류 발생 시 대체 방법 시도
+                    showStatusMessage("첫 번째 방법 실패, 대체 방법 시도 중...", 'blue');
+                    
+                    // 대체 방법: JPEG 형식으로 시도
+                    domtoimage.toJpeg(profileCard, { 
+                        quality: 0.95,
+                        bgcolor: '#ffffff'
+                    })
+                    .then(function(dataUrl) {
+                        const link = document.createElement('a');
+                        link.download = '자기소개표.jpg';
+                        link.href = dataUrl;
+                        link.click();
+                        
+                        showStatusMessage("JPEG 형식으로 저장되었습니다!", 'green');
+                    })
+                    .catch(function(finalError) {
+                        console.error('최종 이미지 생성 실패:', finalError);
+                        showStatusMessage("이미지 생성에 실패했습니다.", 'red');
+                    });
+                });
         }
 
         // 상태 메시지 표시
