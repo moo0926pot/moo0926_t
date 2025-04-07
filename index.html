@@ -776,6 +776,14 @@
             initColorPickers();
             renderTags();
             
+    // 프로필 및 배경 이미지 URL 설정 후 자동 로드
+    document.getElementById('profileImageUrl').value = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkGHVkHhOalIBxWeuKVuV-8T4hGPXVBIgTNw&s";
+    document.getElementById('backgroundImageUrl').value = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkGHVkHhOalIBxWeuKVuV-8T4hGPXVBIgTNw&s";
+    
+    // 이미지 업데이트 함수 호출
+    updateProfileImage();
+    updateBackgroundImage();
+    
             // 엔터키 이벤트
             document.getElementById('newTag').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') addTag();
