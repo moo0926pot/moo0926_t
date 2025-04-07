@@ -7,6 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
+        /* Tailwind 기본 스타일 오버라이딩 - HTML2Canvas 텍스트 렌더링 개선 */
+        img {
+            display: inline-block;
+        }
+        
+        /* html2canvas 렌더링 개선을 위한 추가 스타일 */
+        #profileCard * {
+            text-rendering: geometricPrecision;
+        }
+        
         /* 태그 관련 스타일 */
         #profileTags {
             display: flex;
@@ -94,12 +104,6 @@
         
         .info-label {
             padding-right: 8px;
-        }
-        
-        /* 텍스트 렌더링 개선을 위한 스타일 */
-        .text-fix {
-            position: relative;
-            top: -1px; /* 약간 위로 이동시켜 텍스트 위치 조정 */
         }
         
         /* 헤더 텍스트 위치 조정 */
@@ -253,7 +257,7 @@
                 </div>
             </div>
             
-            <!-- 상세 정보 섹션 - 기존 토글 버튼 방식 복원 -->
+            <!-- 상세 정보 섹션 - 기존 토글 버튼 방식 -->
             <div class="mb-6">
                 <button 
                     class="flex items-center justify-between w-full text-lg font-semibold mb-3 bg-gray-100 p-2 rounded"
@@ -457,7 +461,7 @@
                 <div class="rounded-lg overflow-hidden shadow-lg bg-white sticky top-4" id="profileCard">
                     <!-- 헤더 부분 -->
                     <div class="p-3 text-white text-xl font-bold" id="cardHeader">
-                        <span class="text-fix">AI Chat 자기소개표</span>
+                        AI Chat 자기소개표
                     </div>
                     
                     <!-- 프로필 섹션 -->
@@ -477,10 +481,10 @@
                             <!-- 기본 정보 -->
                             <div>
                                 <div class="font-bold text-gray-700 mb-1" id="profileName">
-                                    <span class="text-fix">닉네임 (@아이디)</span>
+                                    닉네임 (@아이디)
                                 </div>
                                 <div class="text-sm text-gray-600" id="profileBio">
-                                    <span class="text-fix">자신을 간단히 소개해주세요.</span>
+                                    자신을 간단히 소개해주세요.
                                 </div>
                             </div>
                         </div>
@@ -490,37 +494,37 @@
                     <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">관계 정리:</div>
-                            <div class="text-gray-800" id="profileAccountStatus"><span class="text-fix"></span></div>
+                            <div class="text-gray-800" id="profileAccountStatus"></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">지뢰:</div>
-                            <div class="text-gray-800" id="profileSinic"><span class="text-fix"></span></div>
+                            <div class="text-gray-800" id="profileSinic"></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">지뢰 대응:</div>
-                            <div class="text-gray-800" id="profileSpeechType"><span class="text-fix"></span></div>
+                            <div class="text-gray-800" id="profileSpeechType"></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
-                            <div class="text-gray-800" id="profileTweetStyle"><span class="text-fix"></span></div>
+                            <div class="text-gray-800" id="profileTweetStyle"></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">성향:</div>
-                            <div class="text-gray-800" id="profilePlayStyle"><span class="text-fix"></span></div>
+                            <div class="text-gray-800" id="profilePlayStyle"></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">플랫폼:</div>
-                            <div class="text-gray-800" id="profilePlatform"><span class="text-fix"></span></div>
+                            <div class="text-gray-800" id="profilePlatform"></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">CP 성향:</div>
-                            <div class="text-gray-800" id="profileCpPreference"><span class="text-fix"></span></div>
+                            <div class="text-gray-800" id="profileCpPreference"></div>
                         </div>
                     </div>
                     
@@ -641,10 +645,7 @@
         // 헤더 제목 업데이트
         function updateHeaderTitle(title) {
             appState.headerTitle = title;
-            const headerElement = document.querySelector('#cardHeader .text-fix');
-            if (headerElement) {
-                headerElement.textContent = title;
-            }
+            document.getElementById('cardHeader').textContent = title;
         }
 
         // 헤더 텍스트 색상 업데이트
@@ -708,13 +709,7 @@
                 // 미리보기 태그
                 const previewTagElement = document.createElement('span');
                 previewTagElement.className = 'tag-item';
-                
-                // 텍스트 위치 조정을 위한 래퍼
-                const textWrapper = document.createElement('span');
-                textWrapper.className = 'text-fix';
-                textWrapper.textContent = tag;
-                previewTagElement.appendChild(textWrapper);
-                
+                previewTagElement.textContent = tag;
                 previewTagElement.style.backgroundColor = tagBgColor;
                 previewTagElement.style.color = tagTextColor;
                 
@@ -793,7 +788,7 @@
             
             fields.forEach(field => {
                 const value = document.getElementById(field.inputId).value;
-                const outputElement = document.querySelector(`#${field.outputId} .text-fix`);
+                const outputElement = document.getElementById(field.outputId);
                 if (outputElement) {
                     outputElement.textContent = value || field.defaultText || '';
                 }
@@ -810,12 +805,6 @@
             const profileCard = document.getElementById('profileCard');
             showStatusMessage("이미지 생성 중...", 'green');
             
-            // 텍스트 위치 미세 조정 (이미지 캡처 이전)
-            document.querySelectorAll('.text-fix').forEach(el => {
-                el.style.position = 'relative';
-                el.style.top = '-1px';  // 텍스트를 살짝 위로 이동
-            });
-            
             html2canvas(profileCard, {
                 backgroundColor: "#ffffff",
                 scale: 2,
@@ -824,13 +813,6 @@
                 letterRendering: true,
                 allowTaint: true,
                 onclone: function(clonedDoc) {
-                    // 클론된 문서의 텍스트 위치 미세 조정 (더 강력한 적용)
-                    clonedDoc.querySelectorAll('.text-fix').forEach(el => {
-                        el.style.position = 'relative';
-                        el.style.top = '-2px';
-                        el.style.lineHeight = '1.2';
-                    });
-                    
                     // 태그 요소의 패딩 조정
                     clonedDoc.querySelectorAll('.tag-item').forEach(el => {
                         el.style.paddingTop = '4px';
