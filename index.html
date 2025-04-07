@@ -5,11 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>자기소개표 생성기</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas 라이브러리 추가 -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         /* 추가 스타일 */
         .container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 9999px;
         }
     </style>
 </head>
@@ -58,6 +66,23 @@
                         >
                         <span class="text-xs text-gray-500 mt-1" id="tagTextColorText">#6b21a8</span>
                     </div>
+                </div>
+            </div>
+            
+            <!-- 프로필 이미지 URL 입력 필드 추가 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">프로필 이미지</h2>
+                
+                <div class="mb-3">
+                    <label class="block text-sm font-medium mb-1">이미지 URL</label>
+                    <input 
+                        type="text" 
+                        id="profileImageUrl" 
+                        placeholder="https://example.com/image.jpg" 
+                        oninput="updateProfileImage()"
+                        class="w-full p-2 border border-gray-300 rounded"
+                    >
+                    <p class="text-xs text-gray-500 mt-1">프로필 이미지로 사용할 이미지의 URL을 입력하세요.</p>
                 </div>
             </div>
             
@@ -231,9 +256,10 @@
                     <!-- 프로필 섹션 -->
                     <div class="p-4 bg-white">
                         <div class="flex items-start mb-2">
-                            <!-- 프로필 이미지 -->
-                            <div class="w-20 h-20 bg-gray-200 rounded-full mr-4 flex-shrink-0 flex items-center justify-center text-xs text-gray-400">
-                                100 x 100
+                            <!-- 프로필 이미지 - 수정된 부분 -->
+                            <div id="profileImageContainer" class="w-20 h-20 rounded-full mr-4 flex-shrink-0 flex items-center justify-center text-xs text-gray-400 bg-gray-200">
+                                <span id="profileImagePlaceholder">100 x 100</span>
+                                <img id="profileImage" class="profile-image hidden" src="" alt="프로필 이미지">
                             </div>
                             
                             <!-- 기본 정보 -->
@@ -295,7 +321,6 @@
                     </div>
                     
                     <!-- 푸터 -->
-                    <div class="py-2 px-4 text-right text-sm text-gray-500">
                     </div>
                 </div>
             </div>
@@ -315,6 +340,31 @@
             renderTags();
             updateProfile();
         };
+        
+        // 프로필 이미지 업데이트
+        function updateProfileImage() {
+            const imageUrl = document.getElementById('profileImageUrl').value.trim();
+            const profileImage = document.getElementById('profileImage');
+            const profileImagePlaceholder = document.getElementById('profileImagePlaceholder');
+            
+            if (imageUrl !== '') {
+                // 이미지 URL이 있을 경우 이미지 표시
+                profileImage.src = imageUrl;
+                profileImage.classList.remove('hidden');
+                profileImagePlaceholder.classList.add('hidden');
+                
+                // 이미지 로드 오류 처리
+                profileImage.onerror = function() {
+                    profileImage.classList.add('hidden');
+                    profileImagePlaceholder.classList.remove('hidden');
+                    alert('이미지를 불러올 수 없습니다. 올바른 URL인지 확인해주세요.');
+                };
+            } else {
+                // 이미지 URL이 없을 경우 플레이스홀더 표시
+                profileImage.classList.add('hidden');
+                profileImagePlaceholder.classList.remove('hidden');
+            }
+        }
         
         // 헤더 색상 업데이트
         function updateHeaderColor(color) {
@@ -412,18 +462,52 @@
             document.getElementById('profileCpPreference').textContent = cpPreference;
         }
         
-        // 이미지 저장 (실제 구현은 html2canvas 등의 라이브러리가 필요합니다)
+        // 이미지 저장 기능 (html2canvas 라이브러리 사용)
         function downloadImage() {
             const downloadMsg = document.getElementById('downloadMsg');
+            const profileCard = document.getElementById('profileCard');
+            
+            // 저장 버튼 클릭 시 로딩 메시지 표시
+            downloadMsg.textContent = "이미지 생성 중...";
             downloadMsg.classList.remove('hidden');
             
-            // 메시지 3초 후 숨기기
-            setTimeout(() => {
-                downloadMsg.classList.add('hidden');
-            }, 3000);
-            
-            // 실제로는 여기에 html2canvas 등의 라이브러리를 사용하여 이미지 저장 기능을 구현해야 합니다
-            alert('실제 이미지 저장을 위해서는 html2canvas 라이브러리 등이 필요합니다.');
+            // html2canvas를 사용하여 프로필 카드를 이미지로 변환
+            html2canvas(profileCard, {
+                backgroundColor: "#ffffff",
+                scale: 2, // 고해상도를 위해 2배 스케일 적용
+                useCORS: true, // 외부 이미지 로드를 위한 CORS 활성화
+                logging: false
+            }).then(canvas => {
+                // 캔버스를 이미지로 변환
+                const image = canvas.toDataURL("image/png");
+                
+                // 다운로드 링크 생성
+                const downloadLink = document.createElement('a');
+                downloadLink.href = image;
+                downloadLink.download = "자기소개표.png";
+                
+                // 다운로드 트리거
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                // 성공 메시지 표시
+                downloadMsg.textContent = "자기소개표가 이미지로 저장되었습니다!";
+                
+                // 메시지 3초 후 숨기기
+                setTimeout(() => {
+                    downloadMsg.classList.add('hidden');
+                }, 3000);
+            }).catch(error => {
+                console.error("이미지 생성 중 오류 발생:", error);
+                downloadMsg.textContent = "이미지 생성 중 오류가 발생했습니다.";
+                downloadMsg.className = "mt-3 p-2 bg-red-100 text-red-800 rounded text-center";
+                
+                setTimeout(() => {
+                    downloadMsg.classList.add('hidden');
+                    downloadMsg.className = "mt-3 p-2 bg-green-100 text-green-800 rounded text-center hidden";
+                }, 3000);
+            });
         }
     </script>
 </body>
