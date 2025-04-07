@@ -79,34 +79,28 @@
             transition: all 0.2s;
         }
         
-        .option-btn.active {
-            background-color: #F7F4CB;
-            color: #8C6717;
-            border-color: #F7F4CB;
-        }
-        
         /* 상세 정보 영역 - 간격 조정 */
-       .info-grid {
-    display: grid;
-    grid-template-columns: 4.5rem 1fr; /* 라벨 부분 너비 유지 */
-    align-items: flex-start; /* 상단 정렬로 변경 */
-    gap: 0.25rem; /* 간격 유지 */
-    line-height: 1.5; /* 일관된 줄 높이 설정 */
-    margin-bottom: 0.5rem; /* 항목 간 간격 일관되게 */
-}
+        .info-grid {
+            display: grid;
+            grid-template-columns: 4.5rem 1fr; /* 라벨 부분 너비 유지 */
+            align-items: flex-start; /* 상단 정렬로 변경 */
+            gap: 0.25rem; /* 간격 유지 */
+            line-height: 1.5; /* 일관된 줄 높이 설정 */
+            margin-bottom: 0.5rem; /* 항목 간 간격 일관되게 */
+        }
 
-.info-label {
-    padding-right: 2px;
-    white-space: nowrap;
-    font-size: 0.9rem;
-    line-height: 1.5; /* 라벨에도 동일한 줄 높이 적용 */
-}
+        .info-label {
+            padding-right: 2px;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            line-height: 1.5; /* 라벨에도 동일한 줄 높이 적용 */
+        }
 
-/* 내용 부분 스타일 추가 */
-.info-grid > div:nth-child(2) {
-    line-height: 1.5; /* 내용 부분에도 동일한 줄 높이 적용 */
-    padding-top: 1px; /* 미세 조정 */
-}
+        /* 내용 부분 스타일 추가 */
+        .info-grid > div:nth-child(2) {
+            line-height: 1.5; /* 내용 부분에도 동일한 줄 높이 적용 */
+            padding-top: 1px; /* 미세 조정 */
+        }
 
         /* 헤더 텍스트 위치 조정 */
         #cardHeader {
@@ -577,8 +571,17 @@
             
             // 색상 선택기 이벤트
             document.getElementById('headerColor').addEventListener('input', function() {
-                appState.colors.headerColor = this.value;
-                document.getElementById('cardHeader').style.backgroundColor = this.value;
+                const headerColor = this.value;
+                appState.colors.headerColor = headerColor;
+                
+                // 헤더 배경색 적용
+                document.getElementById('cardHeader').style.backgroundColor = headerColor;
+                
+                // 토글 버튼 활성화 배경색 업데이트
+                updateToggleButtonStyles();
+                
+                // 태그 목록 배경색 업데이트 (설정 패널에만)
+                updateSettingTagStyles();
             });
             
             document.getElementById('headerTextColor').addEventListener('input', function() {
@@ -592,7 +595,13 @@
             });
             
             document.getElementById('tagTextColor').addEventListener('input', function() {
-                appState.colors.tagTextColor = this.value;
+                const tagTextColor = this.value;
+                appState.colors.tagTextColor = tagTextColor;
+                
+                // 토글 버튼 텍스트 색상 업데이트
+                updateToggleButtonStyles();
+                
+                // 태그 렌더링 갱신 (미리보기 태그 스타일 변경)
                 renderTags();
             });
             
@@ -604,9 +613,71 @@
                 }
             });
             
+            // 초기 스타일 적용
+            updateToggleButtonStyles();
+            
             // 미리보기 초기 업데이트 (기본값 표시)
             updatePreview();
         });
+
+        // 토글 버튼 스타일 업데이트 함수
+        function updateToggleButtonStyles() {
+            const headerColor = appState.colors.headerColor;
+            const tagTextColor = appState.colors.tagTextColor;
+            
+            // 모든 활성화된 토글 버튼의 스타일 변경
+            document.querySelectorAll('.option-btn.active').forEach(button => {
+                button.style.backgroundColor = headerColor;
+                button.style.color = tagTextColor;
+                button.style.borderColor = headerColor;
+            });
+            
+            // 스타일 규칙 업데이트(동적 CSS 추가)
+            updateCSSRule('.option-btn.active', `
+                background-color: ${headerColor} !important;
+                color: ${tagTextColor} !important;
+                border-color: ${headerColor} !important;
+            `);
+        }
+
+        // 설정 패널의 태그 스타일 업데이트
+        function updateSettingTagStyles() {
+            const headerColor = appState.colors.headerColor;
+            const tagTextColor = appState.colors.tagTextColor;
+            
+            // 설정 패널의 태그 배경색 변경
+            document.querySelectorAll('#tagList .flex.items-center').forEach(tag => {
+                tag.style.backgroundColor = headerColor;
+                tag.style.color = tagTextColor;
+            });
+        }
+
+        // 동적 CSS 규칙 추가/업데이트 함수
+        function updateCSSRule(selector, cssText) {
+            // 기존 스타일 요소 찾기 또는 새로 생성
+            let styleEl = document.getElementById('dynamic-styles');
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = 'dynamic-styles';
+                document.head.appendChild(styleEl);
+            }
+            
+            // 기존 규칙 찾기
+            const sheet = styleEl.sheet;
+            for (let i = 0; sheet.cssRules && i < sheet.cssRules.length; i++) {
+                if (sheet.cssRules[i].selectorText === selector) {
+                    sheet.deleteRule(i);
+                    break;
+                }
+            }
+            
+            // 새 규칙 추가
+            try {
+                sheet.insertRule(`${selector} { ${cssText} }`, sheet.cssRules ? sheet.cssRules.length : 0);
+            } catch (e) {
+                console.error('CSS 규칙 추가 실패:', e);
+            }
+        }
 
         // 옵션 토글 함수 (여러 선택 가능)
         function toggleOption(button) {
@@ -622,10 +693,18 @@
                 // 값 제거
                 values = values.filter(v => v !== value);
                 button.classList.remove('active');
+                // 스타일 제거
+                button.style.backgroundColor = '';
+                button.style.color = '';
+                button.style.borderColor = '';
             } else {
                 // 값 추가
                 values.push(value);
                 button.classList.add('active');
+                // 활성화 스타일 즉시 적용
+                button.style.backgroundColor = appState.colors.headerColor;
+                button.style.color = appState.colors.tagTextColor;
+                button.style.borderColor = appState.colors.headerColor;
             }
             
             // 업데이트된 값 저장
@@ -707,11 +786,14 @@
             
             const tagBgColor = appState.colors.tagColor;
             const tagTextColor = appState.colors.tagTextColor;
+            const headerColor = appState.colors.headerColor; // 헤더 색상 가져오기
             
             appState.tags.forEach(tag => {
-                // 설정 패널의 태그 목록
+                // 설정 패널의 태그 목록 - 헤더 색상 적용
                 const tagElement = document.createElement('div');
-                tagElement.className = 'flex items-center bg-gray-100 px-3 py-1 rounded';
+                tagElement.className = 'flex items-center px-3 py-1 rounded';
+                tagElement.style.backgroundColor = headerColor; // 헤더 색상을 배경색으로 사용
+                tagElement.style.color = tagTextColor; // 태그 텍스트 색상 적용
                 tagElement.innerHTML = `
                     <span class="mr-2">${tag}</span>
                     <button 
@@ -721,7 +803,7 @@
                 `;
                 tagList.appendChild(tagElement);
                 
-                // 미리보기 태그
+                // 미리보기 태그 - 태그 배경 색상 사용
                 const previewTagElement = document.createElement('span');
                 previewTagElement.className = 'tag-item';
                 previewTagElement.textContent = tag;
@@ -730,6 +812,9 @@
                 
                 profileTags.appendChild(previewTagElement);
             });
+            
+            // 설정 패널의 태그 목록 스타일 갱신
+            updateSettingTagStyles();
         }
         
         // 프로필 이미지 업데이트
@@ -811,6 +896,9 @@
             
             // 태그 업데이트
             renderTags();
+            
+            // 토글 버튼 스타일 업데이트
+            updateToggleButtonStyles();
             
             showStatusMessage('미리보기가 업데이트되었습니다!', 'blue');
         }
