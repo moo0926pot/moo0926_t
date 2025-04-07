@@ -7,6 +7,29 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
+        /* 폰트 설정 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        
+        body, .font-fix {
+            font-family: 'Noto Sans KR', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* 텍스트 렌더링 문제 해결을 위한 클래스 */
+        .text-fix {
+            transform: translateY(-2px);
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* 특히 태그 텍스트에 대한 개선 */
+        .tag-text-fix {
+            transform: translateY(-1px);
+            display: inline-block;
+        }
+
         #profileTags {
             display: flex;
             flex-wrap: wrap;
@@ -24,27 +47,7 @@
             line-height: 1.2;
             text-align: center;
             margin: 2px;
-            /* 수직 정렬 개선 */
-            vertical-align: middle;
-        }
-
-        /* 텍스트 정렬 개선 */
-        .text-wrapper {
-            display: flex;
-            align-items: center;
-            line-height: normal;
-            min-height: 24px;
-        }
-
-        /* 프로필 텍스트 정렬 개선 */
-        #profileName, #profileBio, .info-grid, #profileAccountStatus, 
-        #profileSinic, #profileSpeechType, #profileTweetStyle, 
-        #profilePlayStyle, #profilePlatform, #profileCpPreference {
-            line-height: 1.5;
-            padding-top: 2px;
-            padding-bottom: 2px;
-            display: flex;
-            align-items: center;
+            height: 28px;
         }
 
         /* 기본 레이아웃 스타일 */
@@ -112,9 +115,6 @@
         
         .info-label {
             padding-right: 8px;
-            display: flex;
-            align-items: center;
-            min-height: 24px;
         }
         
         /* 반응형 레이아웃 */
@@ -133,9 +133,22 @@
                 top: 20px;
             }
         }
+        
+        /* 텍스트 정렬 문제 해결 */
+        .header-text {
+            position: relative;
+            top: -1px;
+        }
+        
+        /* 이미지 렌더링을 위한 강제 블록 요소화 */
+        #cardHeader, #profileSection, .info-grid, #profileName, 
+        #profileBio, #profileTags, .tag-item {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 font-fix">
     <div class="container flex flex-col md:flex-row min-h-screen">
         <!-- 설정 패널 -->
         <div class="w-full md:w-1/3 p-4 bg-white border-r border-gray-200 overflow-y-auto">
@@ -502,7 +515,7 @@
                 <div class="rounded-lg overflow-hidden shadow-lg bg-white sticky top-4" id="profileCard">
                     <!-- 헤더 부분 -->
                     <div class="p-3 text-white text-xl font-bold flex items-center" style="min-height: 48px;" id="cardHeader">
-                        <span class="text-wrapper">AI Chat 자기소개표</span>
+                        <span class="header-text">AI Chat 자기소개표</span>
                     </div>
                     
                     <!-- 프로필 섹션 -->
@@ -522,10 +535,10 @@
                             <!-- 기본 정보 -->
                             <div>
                                 <div class="font-bold text-gray-700 mb-1 flex items-center" id="profileName">
-                                    <span class="text-wrapper">닉네임 (@아이디)</span>
+                                    <span class="text-fix">닉네임 (@아이디)</span>
                                 </div>
                                 <div class="text-sm text-gray-600 flex items-center" id="profileBio">
-                                    <span class="text-wrapper">자신을 간단히 소개해주세요.</span>
+                                    <span class="text-fix">자신을 간단히 소개해주세요.</span>
                                 </div>
                             </div>
                         </div>
@@ -534,45 +547,45 @@
                     <!-- 상세 정보 섹션 - 정렬 조정 -->
                     <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
                         <div class="grid info-grid gap-2 mb-2">
-                            <div class="text-gray-600 font-medium info-label">관계 정리:</div>
-                            <div class="text-gray-800" id="profileAccountStatus"><span class="text-wrapper"></span></div>
+                            <div class="text-gray-600 font-medium info-label"><span class="text-fix">관계 정리:</span></div>
+                            <div class="text-gray-800" id="profileAccountStatus"><span class="text-fix"></span></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
-                            <div class="text-gray-600 font-medium info-label">지뢰:</div>
-                            <div class="text-gray-800" id="profileSinic"><span class="text-wrapper"></span></div>
+                            <div class="text-gray-600 font-medium info-label"><span class="text-fix">지뢰:</span></div>
+                            <div class="text-gray-800" id="profileSinic"><span class="text-fix"></span></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
-                            <div class="text-gray-600 font-medium info-label">지뢰 대응:</div>
-                            <div class="text-gray-800" id="profileSpeechType"><span class="text-wrapper"></span></div>
+                            <div class="text-gray-600 font-medium info-label"><span class="text-fix">지뢰 대응:</span></div>
+                            <div class="text-gray-800" id="profileSpeechType"><span class="text-fix"></span></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
-                            <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
-                            <div class="text-gray-800" id="profileTweetStyle"><span class="text-wrapper"></span></div>
+                            <div class="text-gray-600 font-medium info-label"><span class="text-fix">트윗 성향:</span></div>
+                            <div class="text-gray-800" id="profileTweetStyle"><span class="text-fix"></span></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
-                            <div class="text-gray-600 font-medium info-label">성향:</div>
-                            <div class="text-gray-800" id="profilePlayStyle"><span class="text-wrapper"></span></div>
+                            <div class="text-gray-600 font-medium info-label"><span class="text-fix">성향:</span></div>
+                            <div class="text-gray-800" id="profilePlayStyle"><span class="text-fix"></span></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
-                            <div class="text-gray-600 font-medium info-label">플랫폼:</div>
-                            <div class="text-gray-800" id="profilePlatform"><span class="text-wrapper"></span></div>
+                            <div class="text-gray-600 font-medium info-label"><span class="text-fix">플랫폼:</span></div>
+                            <div class="text-gray-800" id="profilePlatform"><span class="text-fix"></span></div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
-                            <div class="text-gray-600 font-medium info-label">CP 성향:</div>
-                            <div class="text-gray-800" id="profileCpPreference"><span class="text-wrapper"></span></div>
+                            <div class="text-gray-600 font-medium info-label"><span class="text-fix">CP 성향:</span></div>
+                            <div class="text-gray-800" id="profileCpPreference"><span class="text-fix"></span></div>
                         </div>
                     </div>
                     
                     <!-- 태그 섹션 -->
                     <div class="p-4 border border-gray-200 mx-4 my-2 mb-4 rounded bg-white">
                         <div class="text-gray-600 font-medium mb-2 flex items-center">
-                            <span class="text-wrapper">선호 태그:</span>
+                            <span class="text-fix">선호 태그:</span>
                         </div>
                         <div class="flex flex-wrap gap-2" id="profileTags">
                             <!-- 태그 목록이 여기에 동적으로 추가됩니다 -->
@@ -653,7 +666,7 @@
         // 헤더 제목 업데이트 함수
         function updateHeaderTitle(title) {
             appState.headerTitle = title;
-            const headerElement = document.querySelector('#cardHeader .text-wrapper');
+            const headerElement = document.querySelector('#cardHeader .header-text');
             if (headerElement) {
                 headerElement.textContent = title;
             }
@@ -824,28 +837,28 @@
                 tagList.appendChild(tagElement);
                 
                 // 미리보기 태그 목록에 추가
-                const previewTagElement = document.createElement('span'); // div에서 span으로 변경
+                const previewTagElement = document.createElement('span');
                 previewTagElement.className = 'tag-item';
                 
-                // 텍스트 래퍼 추가 - 수직 정렬 개선
-                const textWrapper = document.createElement('span');
-                textWrapper.className = 'text-wrapper';
-                textWrapper.textContent = tag;
-                previewTagElement.appendChild(textWrapper);
+                // 태그 텍스트를 텍스트 수정 클래스로 감싸기
+                const tagTextElement = document.createElement('span');
+                tagTextElement.className = 'tag-text-fix';
+                tagTextElement.textContent = tag;
+                previewTagElement.appendChild(tagTextElement);
                 
                 // 인라인 스타일 적용 (중앙 정렬 강화)
-                previewTagElement.style.display = 'inline-flex'; // flex에서 inline-flex로 변경
+                previewTagElement.style.display = 'inline-flex';
                 previewTagElement.style.alignItems = 'center';
                 previewTagElement.style.justifyContent = 'center';
                 previewTagElement.style.backgroundColor = tagBgColor;
                 previewTagElement.style.color = tagTextColor;
-                previewTagElement.style.padding = '3px 12px';  // 패딩 조정
+                previewTagElement.style.padding = '3px 12px';
                 previewTagElement.style.margin = '4px';
                 previewTagElement.style.borderRadius = '8px';
                 previewTagElement.style.fontSize = '14px';
-                previewTagElement.style.lineHeight = '1.2'; // 라인 높이 추가
-                previewTagElement.style.textAlign = 'center'; // 텍스트 정렬 추가
-                previewTagElement.style.height = '28px'; // 고정 높이 추가
+                previewTagElement.style.lineHeight = '1.2';
+                previewTagElement.style.textAlign = 'center';
+                previewTagElement.style.height = '28px';
                 
                 profileTags.appendChild(previewTagElement);
             });
@@ -924,49 +937,49 @@
             const cpPreference = document.getElementById('cpPreference').value;
             
             // 닉네임/아이디 업데이트
-            const profileNameElement = document.querySelector('#profileName .text-wrapper');
+            const profileNameElement = document.querySelector('#profileName .text-fix');
             if (profileNameElement) {
                 profileNameElement.textContent = nickname || '닉네임 (@아이디)';
             }
             
             // 소개 업데이트
-            const profileBioElement = document.querySelector('#profileBio .text-wrapper');
+            const profileBioElement = document.querySelector('#profileBio .text-fix');
             if (profileBioElement) {
                 profileBioElement.textContent = bio || '자신을 간단히 소개해주세요.';
             }
             
-            // 상세 정보 업데이트 - 텍스트 래퍼 사용
-            const accountStatusElement = document.querySelector('#profileAccountStatus .text-wrapper');
+            // 상세 정보 업데이트 - text-fix 클래스 사용
+            const accountStatusElement = document.querySelector('#profileAccountStatus .text-fix');
             if (accountStatusElement) {
                 accountStatusElement.textContent = accountStatus;
             }
             
-            const sinicElement = document.querySelector('#profileSinic .text-wrapper');
+            const sinicElement = document.querySelector('#profileSinic .text-fix');
             if (sinicElement) {
                 sinicElement.textContent = sinic;
             }
             
-            const speechTypeElement = document.querySelector('#profileSpeechType .text-wrapper');
+            const speechTypeElement = document.querySelector('#profileSpeechType .text-fix');
             if (speechTypeElement) {
                 speechTypeElement.textContent = speechType;
             }
             
-            const tweetStyleElement = document.querySelector('#profileTweetStyle .text-wrapper');
+            const tweetStyleElement = document.querySelector('#profileTweetStyle .text-fix');
             if (tweetStyleElement) {
                 tweetStyleElement.textContent = tweetStyle;
             }
             
-            const playStyleElement = document.querySelector('#profilePlayStyle .text-wrapper');
+            const playStyleElement = document.querySelector('#profilePlayStyle .text-fix');
             if (playStyleElement) {
                 playStyleElement.textContent = playStyle;
             }
             
-            const platformElement = document.querySelector('#profilePlatform .text-wrapper');
+            const platformElement = document.querySelector('#profilePlatform .text-fix');
             if (platformElement) {
                 platformElement.textContent = platform;
             }
             
-            const cpPreferenceElement = document.querySelector('#profileCpPreference .text-wrapper');
+            const cpPreferenceElement = document.querySelector('#profileCpPreference .text-fix');
             if (cpPreferenceElement) {
                 cpPreferenceElement.textContent = cpPreference;
             }
@@ -1003,18 +1016,27 @@
             showStatusMessage('미리보기가 업데이트되었습니다!', 'blue');
         }
 
-        // 이미지 저장 전 렌더링 최적화 함수
-        function prepareForRendering() {
-            // 텍스트 래퍼 요소들의 위치 미세 조정
-            document.querySelectorAll('.text-wrapper').forEach(element => {
-                element.style.paddingTop = '1px';
-                element.style.paddingBottom = '1px';
-            });
+        // DOM에서 svg 기반 폰트로 변환 (더 나은 텍스트 렌더링을 위해)
+        function convertTextToForeignObject(element) {
+            const elements = element.querySelectorAll('.text-fix, .tag-text-fix, .header-text');
             
-            // 태그 요소들 조정
-            document.querySelectorAll('.tag-item').forEach(element => {
-                element.style.paddingTop = '5px'; // 위쪽 패딩 증가
-                element.style.paddingBottom = '3px'; // 아래쪽 패딩 감소
+            elements.forEach(el => {
+                const text = el.textContent;
+                const style = window.getComputedStyle(el);
+                const color = style.color;
+                const fontSize = style.fontSize;
+                const fontWeight = style.fontWeight;
+                
+                // HTML 안전하게 인코딩
+                const safeText = text.replace(/&/g, '&amp;')
+                                    .replace(/</g, '&lt;')
+                                    .replace(/>/g, '&gt;')
+                                    .replace(/"/g, '&quot;')
+                                    .replace(/'/g, '&#039;');
+                
+                el.innerHTML = `<svg width="${el.offsetWidth || 100}" height="${el.offsetHeight || 24}" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="14" fill="${color}" font-size="${fontSize}" font-weight="${fontWeight}">${safeText}</text>
+                </svg>`;
             });
         }
 
@@ -1025,37 +1047,66 @@
             // 저장 버튼 클릭 시 로딩 메시지 표시
             showStatusMessage("이미지 생성 중...", 'green');
             
-            // 렌더링 전 요소 최적화
-            prepareForRendering();
+            // 이미지 복제 후 수정
+            const clone = profileCard.cloneNode(true);
+            document.body.appendChild(clone);
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px';
             
-            // html2canvas를 사용하여 프로필 카드를 이미지로 변환
-            html2canvas(profileCard, {
-                backgroundColor: "#ffffff",
-                scale: 2, // 고해상도를 위해 2배 스케일 적용
-                useCORS: true, // 외부 이미지 로드를 위한 CORS 활성화
-                logging: false,
-                letterRendering: true, // 텍스트 렌더링 품질 향상
-                allowTaint: true, // 텍스트 렌더링을 위해 허용
-            }).then(canvas => {
-                // 캔버스를 이미지로 변환
-                const image = canvas.toDataURL("image/png");
-                
-                // 다운로드 링크 생성
-                const downloadLink = document.createElement('a');
-                downloadLink.href = image;
-                downloadLink.download = "자기소개표.png";
-                
-                // 다운로드 트리거
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-                
-                // 성공 메시지 표시
-                showStatusMessage("자기소개표가 이미지로 저장되었습니다!", 'green');
-            }).catch(error => {
-                console.error("이미지 생성 중 오류 발생:", error);
-                showStatusMessage("이미지 생성 중 오류가 발생했습니다.", 'red');
-            });
+            // 텍스트 안정화 적용
+            setTimeout(() => {
+                html2canvas(clone, {
+                    backgroundColor: "#ffffff",
+                    scale: 2, // 고해상도를 위해 2배 스케일 적용
+                    useCORS: true, // 외부 이미지 로드를 위한 CORS 활성화
+                    allowTaint: true,
+                    letterRendering: true,
+                    fontDisplay: 'swap',
+                    onclone: function(clonedDoc) {
+                        // 특별한 텍스트 렌더링 처리
+                        const clonedCard = clonedDoc.querySelector('#profileCard');
+                        
+                        // 텍스트 위치 미세 조정
+                        const textFixElements = clonedCard.querySelectorAll('.text-fix');
+                        textFixElements.forEach(el => {
+                            el.style.transform = 'translateY(-2px)';
+                        });
+                        
+                        const tagTextFixElements = clonedCard.querySelectorAll('.tag-text-fix');
+                        tagTextFixElements.forEach(el => {
+                            el.style.transform = 'translateY(-1px)';
+                        });
+                        
+                        const headerTextElement = clonedCard.querySelector('.header-text');
+                        if (headerTextElement) {
+                            headerTextElement.style.transform = 'translateY(-1px)';
+                        }
+                    }
+                }).then(canvas => {
+                    // 임시 복제 요소 제거
+                    document.body.removeChild(clone);
+                    
+                    // 캔버스를 이미지로 변환
+                    const image = canvas.toDataURL("image/png");
+                    
+                    // 다운로드 링크 생성
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = image;
+                    downloadLink.download = "자기소개표.png";
+                    
+                    // 다운로드 트리거
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    
+                    // 성공 메시지 표시
+                    showStatusMessage("자기소개표가 이미지로 저장되었습니다!", 'green');
+                }).catch(error => {
+                    console.error("이미지 생성 중 오류 발생:", error);
+                    document.body.removeChild(clone);
+                    showStatusMessage("이미지 생성 중 오류가 발생했습니다.", 'red');
+                });
+            }, 100);
         }
 
         // 상태 메시지 표시 함수
