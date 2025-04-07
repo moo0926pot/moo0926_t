@@ -778,24 +778,23 @@ function renderTags() {
         tagList.appendChild(tagElement);
         
         // 미리보기 태그 목록에 추가
-const previewTagElement = document.createElement('div');
-previewTagElement.textContent = tag;
-previewTagElement.setAttribute('style', `
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 28px;
-    width: auto;
-    padding: 0 12px;
-    background-color: ${tagBgColor};
-    color: ${tagTextColor};
-    font-size: 14px;
-    font-family: sans-serif;
-    border-radius: 8px;
-    box-sizing: border-box;
-    line-height: 28px; /* 💡 이 줄 추가! */
-`);
+        const previewTagElement = document.createElement('div');
         previewTagElement.textContent = tag;
+        previewTagElement.setAttribute('style', `
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 28px;
+            width: auto;
+            padding: 0 12px;
+            background-color: ${tagBgColor};
+            color: ${tagTextColor};
+            font-size: 14px;
+            font-family: sans-serif;
+            border-radius: 8px;
+            box-sizing: border-box;
+            line-height: 28px; /* ✅ 추가됨: 텍스트 수직 정렬 해결 */
+        `);
         profileTags.appendChild(previewTagElement);
     });
 }
