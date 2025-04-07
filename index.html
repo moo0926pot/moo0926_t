@@ -30,22 +30,35 @@
         }
         .bg-container {
             position: relative;
+            min-height: 120px; /* 최소 높이 설정 */
         }
-@media (min-width: 768px) {
-    .container {
-        min-height: 100vh;
-        height: 100vh;
-    }
-    
-    .overflow-y-auto {
-        max-height: 100vh;
-    }
-    
-    #profileCard {
-        position: sticky;
-        top: 20px;
-    }
-}
+        #backgroundImageContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .has-bg-image {
+            border: 1px dashed #e9d5ff;
+            background-color: rgba(250, 245, 255, 0.5);
+        }
+        @media (min-width: 768px) {
+            .container {
+                min-height: 100vh;
+                height: 100vh;
+            }
+            
+            .overflow-y-auto {
+                max-height: 100vh;
+            }
+            
+            #profileCard {
+                position: sticky;
+                top: 20px;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -93,48 +106,64 @@
                 </div>
             </div>
             
-            <!-- 프로필 이미지 URL 입력 필드 -->
+            <!-- 프로필/배경 이미지 통합 섹션 (접기/펴기 가능) -->
             <div class="mb-6">
-                <h2 class="text-lg font-semibold mb-3">프로필 이미지</h2>
+                <button 
+                    class="flex items-center justify-between w-full text-lg font-semibold mb-3 bg-gray-100 p-2 rounded"
+                    onclick="toggleImageSection()"
+                >
+                    <span>이미지 설정</span>
+                    <svg id="imageToggleIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transform transition-transform">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
                 
-                <div class="mb-3">
-                    <label class="block text-sm font-medium mb-1">이미지 URL</label>
-                    <input 
-                        type="text" 
-                        id="profileImageUrl" 
-                        placeholder="https://example.com/image.jpg" 
-                        class="w-full p-2 border border-gray-300 rounded"
-                    >
-                    <p class="text-xs text-gray-500 mt-1">프로필 이미지로 사용할 이미지의 URL을 입력하세요.</p>
-                </div>
-            </div>
-            
-            <!-- 배경 이미지 URL 및 투명도 입력 필드 추가 -->
-            <div class="mb-6">
-                <h2 class="text-lg font-semibold mb-3">배경 이미지</h2>
-                
-                <div class="mb-3">
-                    <label class="block text-sm font-medium mb-1">배경 이미지 URL</label>
-                    <input 
-                        type="text" 
-                        id="backgroundImageUrl" 
-                        placeholder="https://example.com/background.jpg" 
-                        class="w-full p-2 border border-gray-300 rounded"
-                    >
-                    <p class="text-xs text-gray-500 mt-1">배경 이미지로 사용할 이미지의 URL을 입력하세요.</p>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="block text-sm font-medium mb-1">배경 투명도: <span id="opacityValue">50%</span></label>
-                    <input 
-                        type="range" 
-                        id="backgroundOpacity" 
-                        min="0" 
-                        max="100" 
-                        value="50" 
-                        class="w-full"
-                        oninput="document.getElementById('opacityValue').textContent = this.value + '%'"
-                    >
+                <div id="imageSection" class="hidden">
+                    <!-- 프로필 이미지 설정 -->
+                    <div class="mb-4 p-3 border border-gray-200 rounded">
+                        <h3 class="text-md font-medium mb-2">프로필 이미지</h3>
+                        
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium mb-1">이미지 URL</label>
+                            <input 
+                                type="text" 
+                                id="profileImageUrl" 
+                                placeholder="https://example.com/image.jpg" 
+                                class="w-full p-2 border border-gray-300 rounded"
+                            >
+                            <p class="text-xs text-gray-500 mt-1">프로필 이미지로 사용할 이미지의 URL을 입력하세요.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 배경 이미지 설정 -->
+                    <div class="p-3 border border-gray-200 rounded">
+                        <h3 class="text-md font-medium mb-2">배경 이미지</h3>
+                        
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium mb-1">배경 이미지 URL</label>
+                            <input 
+                                type="text" 
+                                id="backgroundImageUrl" 
+                                placeholder="https://example.com/background.jpg" 
+                                class="w-full p-2 border border-gray-300 rounded"
+                            >
+                            <p class="text-xs text-gray-500 mt-1">배경 이미지로 사용할 이미지의 URL을 입력하세요.</p>
+                            <p class="text-xs text-blue-500 mt-1">※ 배경 이미지는 프로필 섹션 전체에 적용됩니다.</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium mb-1">배경 투명도: <span id="opacityValue">50%</span></label>
+                            <input 
+                                type="range" 
+                                id="backgroundOpacity" 
+                                min="0" 
+                                max="100" 
+                                value="50" 
+                                class="w-full"
+                                oninput="document.getElementById('opacityValue').textContent = this.value + '%'"
+                            >
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -299,93 +328,93 @@
             </div>
         </div>
         
-<!-- 미리보기 패널 -->
-<div class="w-full md:w-2/3 p-4 bg-gray-100 flex justify-center items-start overflow-y-auto">
-    <div class="w-full max-w-md">
-        <h2 class="text-lg font-semibold mb-4">미리보기</h2>
-        
-        <div class="rounded-lg overflow-hidden shadow-lg bg-white sticky top-4" id="profileCard">
-            <!-- 헤더 부분 -->
-            <div class="p-3 text-white text-xl font-bold" id="cardHeader">
-                AI Chat 자기소개표
-            </div>
-            
-            <!-- 프로필 섹션 -->
-            <div class="p-4 bg-white bg-container" id="profileSection">
-                <!-- 배경 이미지 - 새로 추가 -->
-                <div id="backgroundImageContainer" class="hidden">
-                    <img id="backgroundImage" class="profile-bg" src="" alt="배경 이미지">
-                </div>
+        <!-- 미리보기 패널 -->
+        <div class="w-full md:w-2/3 p-4 bg-gray-100 flex justify-center items-start overflow-y-auto">
+            <div class="w-full max-w-md">
+                <h2 class="text-lg font-semibold mb-4">미리보기</h2>
                 
-                <div class="flex items-start mb-2 relative z-10">
-                    <!-- 프로필 이미지 -->
-                    <div id="profileImageContainer" class="w-20 h-20 rounded-full mr-4 flex-shrink-0 flex items-center justify-center text-xs text-gray-400 bg-gray-200">
-                        <span id="profileImagePlaceholder">100 x 100</span>
-                        <img id="profileImage" class="profile-image hidden" src="" alt="프로필 이미지">
+                <div class="rounded-lg overflow-hidden shadow-lg bg-white sticky top-4" id="profileCard">
+                    <!-- 헤더 부분 -->
+                    <div class="p-3 text-white text-xl font-bold" id="cardHeader">
+                        AI Chat 자기소개표
                     </div>
                     
-                    <!-- 기본 정보 -->
-                    <div>
-                        <div class="font-bold text-gray-700 mb-1" id="profileName">
-                            닉네임 (@아이디)
+                    <!-- 프로필 섹션 -->
+                    <div class="p-4 bg-white bg-container" id="profileSection">
+                        <!-- 배경 이미지 - 새로 추가 -->
+                        <div id="backgroundImageContainer" class="hidden">
+                            <img id="backgroundImage" class="profile-bg" src="" alt="배경 이미지">
                         </div>
-                        <div class="text-sm text-gray-600" id="profileBio">
-                            자신을 간단히 소개해주세요.
+                        
+                        <div class="flex items-start mb-2 relative z-10">
+                            <!-- 프로필 이미지 -->
+                            <div id="profileImageContainer" class="w-20 h-20 rounded-full mr-4 flex-shrink-0 flex items-center justify-center text-xs text-gray-400 bg-gray-200">
+                                <span id="profileImagePlaceholder">100 x 100</span>
+                                <img id="profileImage" class="profile-image hidden" src="" alt="프로필 이미지">
+                            </div>
+                            
+                            <!-- 기본 정보 -->
+                            <div>
+                                <div class="font-bold text-gray-700 mb-1" id="profileName">
+                                    닉네임 (@아이디)
+                                </div>
+                                <div class="text-sm text-gray-600" id="profileBio">
+                                    자신을 간단히 소개해주세요.
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- 상세 정보 섹션 -->
+                    <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <div class="text-gray-600 font-medium">계정 정리:</div>
+                            <div class="col-span-2 text-gray-800" id="profileAccountStatus">블락 블언블 언멘</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <div class="text-gray-600 font-medium">지뢰:</div>
+                            <div class="col-span-2 text-gray-800" id="profileSinic"></div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <div class="text-gray-600 font-medium">지칭 대응:</div>
+                            <div class="col-span-2 text-gray-800" id="profileSpeechType">무시기능 적매채입무시기능 무시불가능</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <div class="text-gray-600 font-medium">트윗 성향:</div>
+                            <div class="col-span-2 text-gray-800" id="profileTweetStyle">일상 RT 다섯엄지 보석 우웅 R18 픽웃션 고어 담배외부 바경외스 자살묘사</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <div class="text-gray-600 font-medium">놀이 성향:</div>
+                            <div class="col-span-2 text-gray-800" id="profilePlayStyle">재작자 소비자</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <div class="text-gray-600 font-medium">플랫폼:</div>
+                            <div class="col-span-2 text-gray-800" id="profilePlatform">Rotarl Caveduck Moebius with ZETA 가타/</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-2">
+                            <div class="text-gray-600 font-medium">CP 성향:</div>
+                            <div class="col-span-2 text-gray-800" id="profileCpPreference">HL BL GL ALL NCP 미니서스 돈괴비자봄</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 태그 섹션 -->
+                    <div class="p-4 border border-gray-200 mx-4 my-2 mb-4 rounded bg-white">
+                        <div class="text-gray-600 font-medium mb-2">선호 태그:</div>
+                        <div class="flex flex-wrap gap-2" id="profileTags">
+                            <!-- 태그 목록이 여기에 동적으로 추가됩니다 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 푸터 -->
                 </div>
             </div>
-            
-            <!-- 상세 정보 섹션 -->
-            <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
-                <div class="grid grid-cols-3 gap-2 mb-2">
-                    <div class="text-gray-600 font-medium">계정 정리:</div>
-                    <div class="col-span-2 text-gray-800" id="profileAccountStatus">블락 블언블 언멘</div>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-2 mb-2">
-                    <div class="text-gray-600 font-medium">지뢰:</div>
-                    <div class="col-span-2 text-gray-800" id="profileSinic"></div>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-2 mb-2">
-                    <div class="text-gray-600 font-medium">지칭 대응:</div>
-                    <div class="col-span-2 text-gray-800" id="profileSpeechType">무시기능 적매채입무시기능 무시불가능</div>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-2 mb-2">
-                    <div class="text-gray-600 font-medium">트윗 성향:</div>
-                    <div class="col-span-2 text-gray-800" id="profileTweetStyle">일상 RT 다섯엄지 보석 우웅 R18 픽웃션 고어 담배외부 바경외스 자살묘사</div>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-2 mb-2">
-                    <div class="text-gray-600 font-medium">놀이 성향:</div>
-                    <div class="col-span-2 text-gray-800" id="profilePlayStyle">재작자 소비자</div>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-2 mb-2">
-                    <div class="text-gray-600 font-medium">플랫폼:</div>
-                    <div class="col-span-2 text-gray-800" id="profilePlatform">Rotarl Caveduck Moebius with ZETA 가타/</div>
-                </div>
-                
-                <div class="grid grid-cols-3 gap-2 mb-2">
-                    <div class="text-gray-600 font-medium">CP 성향:</div>
-                    <div class="col-span-2 text-gray-800" id="profileCpPreference">HL BL GL ALL NCP 미니서스 돈괴비자봄</div>
-                </div>
-            </div>
-            
-            <!-- 태그 섹션 -->
-            <div class="p-4 border border-gray-200 mx-4 my-2 mb-4 rounded bg-white">
-                <div class="text-gray-600 font-medium mb-2">선호 태그:</div>
-                <div class="flex flex-wrap gap-2" id="profileTags">
-                    <!-- 태그 목록이 여기에 동적으로 추가됩니다 -->
-                </div>
-            </div>
-            
-            <!-- 푸터 -->
         </div>
-    </div>
-</div>
     </div>
 
     <script>
@@ -400,6 +429,20 @@
             updateTagTextColor('#6b21a8');
             renderTags();
         };
+        
+        // 이미지 섹션 접기/펴기 토글 함수
+        function toggleImageSection() {
+            const imageSection = document.getElementById('imageSection');
+            const imageToggleIcon = document.getElementById('imageToggleIcon');
+            
+            if (imageSection.classList.contains('hidden')) {
+                imageSection.classList.remove('hidden');
+                imageToggleIcon.classList.add('rotate-180');
+            } else {
+                imageSection.classList.add('hidden');
+                imageToggleIcon.classList.remove('rotate-180');
+            }
+        }
         
         // 미리보기 업데이트
         function updatePreview() {
@@ -445,7 +488,7 @@
             }
         }
         
-        // 배경 이미지 업데이트 함수 추가
+        // 배경 이미지 업데이트 함수 수정
         function updateBackgroundImage() {
             const imageUrl = document.getElementById('backgroundImageUrl').value.trim();
             const opacity = document.getElementById('backgroundOpacity').value;
@@ -461,14 +504,19 @@
                 // 투명도 적용
                 backgroundImage.style.opacity = opacity / 100;
                 
+                // 프로필 섹션에 배경 있음 클래스 추가
+                profileSection.classList.add('has-bg-image');
+                
                 // 이미지 로드 오류 처리
                 backgroundImage.onerror = function() {
                     backgroundImageContainer.classList.add('hidden');
+                    profileSection.classList.remove('has-bg-image');
                     alert('배경 이미지를 불러올 수 없습니다. 올바른 URL인지 확인해주세요.');
                 };
             } else {
                 // 이미지 URL이 없을 경우 배경 이미지 숨김
                 backgroundImageContainer.classList.add('hidden');
+                profileSection.classList.remove('has-bg-image');
             }
         }
         
