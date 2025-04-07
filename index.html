@@ -85,15 +85,17 @@
             border-color: #F7F4CB;
         }
         
-        /* 상세 정보 영역 */
+        /* 상세 정보 영역 - 간격 조정 */
         .info-grid {
-            grid-template-columns: 1fr 2fr;
             display: grid;
+            grid-template-columns: 5rem auto; /* 라벨 부분을 고정 너비로 설정 */
             align-items: center;
+            gap: 0.5rem; /* 라벨과 값 사이 간격 줄임 */
         }
         
         .info-label {
-            padding-right: 8px;
+            padding-right: 4px;
+            white-space: nowrap; /* 라벨 텍스트 줄바꿈 방지 */
         }
         
         /* 헤더 텍스트 위치 조정 */
@@ -490,39 +492,39 @@
                         </div>
                     </div>
                     
-                    <!-- 상세 정보 섹션 -->
+                    <!-- 상세 정보 섹션 - 간격 조정 -->
                     <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
-                        <div class="grid info-grid gap-2 mb-2">
+                        <div class="info-grid mb-2">
                             <div class="text-gray-600 font-medium info-label">관계 정리:</div>
                             <div class="text-gray-800" id="profileAccountStatus">블락,블언블,언팔</div>
                         </div>
                         
-                        <div class="grid info-grid gap-2 mb-2">
+                        <div class="info-grid mb-2">
                             <div class="text-gray-600 font-medium info-label">지뢰:</div>
                             <div class="text-gray-800" id="profileSinic"></div>
                         </div>
                         
-                        <div class="grid info-grid gap-2 mb-2">
+                        <div class="info-grid mb-2">
                             <div class="text-gray-600 font-medium info-label">지뢰 대응:</div>
                             <div class="text-gray-800" id="profileSpeechType">무시가능,직멘제외무시가능,무시불가능</div>
                         </div>
                         
-                        <div class="grid info-grid gap-2 mb-2">
+                        <div class="info-grid mb-2">
                             <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
                             <div class="text-gray-800" id="profileTweetStyle">일상,RT,타장르언급,욕설,우울,R18,폭력성,고어,탐라대화,마음요정,인용대화</div>
                         </div>
                         
-                        <div class="grid info-grid gap-2 mb-2">
+                        <div class="info-grid mb-2">
                             <div class="text-gray-600 font-medium info-label">성향:</div>
                             <div class="text-gray-800" id="profilePlayStyle">제작자,소비자</div>
                         </div>
                         
-                        <div class="grid info-grid gap-2 mb-2">
+                        <div class="info-grid mb-2">
                             <div class="text-gray-600 font-medium info-label">플랫폼:</div>
                             <div class="text-gray-800" id="profilePlatform"></div>
                         </div>
                         
-                        <div class="grid info-grid gap-2 mb-2">
+                        <div class="info-grid mb-2">
                             <div class="text-gray-600 font-medium info-label">CP 성향:</div>
                             <div class="text-gray-800" id="profileCpPreference">HL,BL,GL,ALL,NCP,리버시블,논리버시블</div>
                         </div>
