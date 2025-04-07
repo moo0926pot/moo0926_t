@@ -276,6 +276,10 @@
     grid-template-columns: 80px 1fr; /* 예시: 5rem 대신 고정 px 사용 */
 }
 */
+.profile-right .grid > div { /* .profile-right 안의 .grid 바로 아래 div들 */
+    width: 100%;          /* 부모 요소(grid 컨테이너)의 너비를 100% 사용 */
+    box-sizing: border-box; /* 패딩, 테두리가 너비 계산에 포함되도록 함 */
+}
 
     </style>
 </head>
