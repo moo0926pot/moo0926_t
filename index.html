@@ -535,71 +535,63 @@
                     </div>
                 </div>
                 
-                <!-- 상세 정보 그리드 - 프로필 아래로 이동 -->
-                <div class="w-full mt-2">
-                    <div class="grid grid-cols-1 gap-2">
-
-                        <div class="p-2 border border-gray-200 rounded bg-white">
-                            <div class="info-grid">
-                                <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
-                                <div class="text-gray-800" id="profileTweetStyle">일상,RT,타장르언급,욕설,우울,R18,폭력성,고어,탐라대화,마음요정,인용대화</div>
-                            </div>
-                        </div>
-
-                        <!-- 성향 - 왼쪽으로 이동 -->
-                        <div class="p-2 border border-gray-200 rounded bg-white">
-                            <div class="info-grid">
-                                <div class="text-gray-600 font-medium info-label">성향:</div>
-                                <div class="text-gray-800" id="profilePlayStyle">제작자,소비자</div>
-                            </div>
-                        </div>
-                        
-
-                        <!-- 플랫폼 - 왼쪽으로 이동 -->
-                        <div class="p-2 border border-gray-200 rounded bg-white">
-                            <div class="info-grid">
-                                <div class="text-gray-600 font-medium info-label">플랫폼:</div>
-                                <div class="text-gray-800" id="profilePlatform"></div>
-                            </div>
-                        </div>                        
-
-              <!-- CP 성향 - 왼쪽으로 이동 -->
-                        <div class="p-2 border border-gray-200 rounded bg-white">
-                            <div class="info-grid">
-                                <div class="text-gray-600 font-medium info-label">CP 성향:</div>
-                                <div class="text-gray-800" id="profileCpPreference">HL,BL,GL,ALL,NCP,리버시블,논리버시블</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                        <div class="p-2 border border-gray-200 rounded bg-white">
-                            <div class="info-grid">
-                                <div class="text-gray-600 font-medium info-label">관계 정리:</div>
-                                <div class="text-gray-800" id="profileAccountStatus">블락,블언블,언팔</div>
-                            </div>
-                        </div>
-                        
-<!-- 병합된 지뢰/지뢰 대응 항목 -->
-<div class="p-2 border border-gray-200 rounded bg-white">
-    <div class="info-grid">
-        <div class="text-gray-600 font-medium info-label">지뢰:</div>
-        <div class="text-gray-800">
-            <span id="profileSinic"></span>
-            <span id="profileSpeechTypeWrapper">
-                (<span id="profileSpeechType">무시가능</span>)
-            </span>
+<!-- 상세 정보 그리드 - 프로필 아래로 이동 -->
+<div class="w-full mt-2">
+    <div class="grid grid-cols-1 gap-2">
+        <!-- 트윗 성향 -->
+        <div class="p-2 border border-gray-200 rounded bg-white">
+            <div class="info-grid">
+                <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
+                <div class="text-gray-800" id="profileTweetStyle">일상,RT,타장르언급,욕설,우울,R18,폭력성,고어,탐라대화,마음요정,인용대화</div>
+            </div>
         </div>
-    </div>
-</div>
-                        
 
-          
+        <!-- 성향 -->
+        <div class="p-2 border border-gray-200 rounded bg-white">
+            <div class="info-grid">
+                <div class="text-gray-600 font-medium info-label">성향:</div>
+                <div class="text-gray-800" id="profilePlayStyle">제작자,소비자</div>
             </div>
         </div>
         
-                        
+        <!-- 플랫폼 -->
+        <div class="p-2 border border-gray-200 rounded bg-white">
+            <div class="info-grid">
+                <div class="text-gray-600 font-medium info-label">플랫폼:</div>
+                <div class="text-gray-800" id="profilePlatform"></div>
+            </div>
+        </div>                        
 
+        <!-- CP 성향 -->
+        <div class="p-2 border border-gray-200 rounded bg-white">
+            <div class="info-grid">
+                <div class="text-gray-600 font-medium info-label">CP 성향:</div>
+                <div class="text-gray-800" id="profileCpPreference">HL,BL,GL,ALL,NCP,리버시블,논리버시블</div>
+            </div>
+        </div>
+        
+        <!-- 관계 정리 -->
+        <div class="p-2 border border-gray-200 rounded bg-white">
+            <div class="info-grid">
+                <div class="text-gray-600 font-medium info-label">관계 정리:</div>
+                <div class="text-gray-800" id="profileAccountStatus">블락,블언블,언팔</div>
+            </div>
+        </div>
+        
+        <!-- 병합된 지뢰/지뢰 대응 항목 -->
+        <div class="p-2 border border-gray-200 rounded bg-white">
+            <div class="info-grid">
+                <div class="text-gray-600 font-medium info-label">지뢰:</div>
+                <div class="text-gray-800">
+                    <span id="profileSinic"></span>
+                    <span id="profileSpeechTypeWrapper">
+                        (<span id="profileSpeechType">무시가능</span>)
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
         <!-- 우측 정보 영역 -->
         <div class="profile-right">
             <!-- 태그 섹션 - 우측에 배치 -->
