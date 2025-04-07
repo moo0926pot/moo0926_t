@@ -240,48 +240,17 @@
                     <input type="hidden" id="accountStatus" value="">
                 </div>
                 
-                <!-- 지뢰 -->
+                <!-- 지뢰 (텍스트 입력으로 변경) -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-2">지뢰</label>
-                    <div class="flex flex-wrap gap-2" id="sinicOptions">
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="sinic" 
-                            data-value="과몰입"
-                            onclick="toggleOption(this)"
-                        >
-                            과몰입
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="sinic" 
-                            data-value="욕설"
-                            onclick="toggleOption(this)"
-                        >
-                            욕설
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="sinic" 
-                            data-value="비방"
-                            onclick="toggleOption(this)"
-                        >
-                            비방
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="sinic" 
-                            data-value="비매너"
-                            onclick="toggleOption(this)"
-                        >
-                            비매너
-                        </button>
-                    </div>
-                    <input type="hidden" id="sinic" value="">
+                    <input 
+                        type="text" 
+                        id="sinic" 
+                        value="" 
+                        placeholder="지뢰가 되는 요소를 입력하세요" 
+                        class="w-full p-2 border border-gray-300 rounded"
+                        oninput="updateProfile()"
+                    >
                 </div>
                 
                 <!-- 지뢰 대응 -->
@@ -452,48 +421,17 @@
                     <input type="hidden" id="playStyle" value="">
                 </div>
                 
-                <!-- 플랫폼 -->
+                <!-- 플랫폼 (텍스트 입력으로 변경) -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium mb-2">플랫폼</label>
-                    <div class="flex flex-wrap gap-2" id="platformOptions">
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="platform" 
-                            data-value="트위터"
-                            onclick="toggleOption(this)"
-                        >
-                            트위터
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="platform" 
-                            data-value="블루스카이"
-                            onclick="toggleOption(this)"
-                        >
-                            블루스카이
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="platform" 
-                            data-value="인스타그램"
-                            onclick="toggleOption(this)"
-                        >
-                            인스타그램
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="platform" 
-                            data-value="페이스북"
-                            onclick="toggleOption(this)"
-                        >
-                            페이스북
-                        </button>
-                    </div>
-                    <input type="hidden" id="platform" value="">
+                    <input 
+                        type="text" 
+                        id="platform" 
+                        value="" 
+                        placeholder="이용 중인 플랫폼을 입력하세요" 
+                        class="w-full p-2 border border-gray-300 rounded"
+                        oninput="updateProfile()"
+                    >
                 </div>
                 
                 <!-- CP 성향 -->
@@ -695,7 +633,7 @@
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
                             <div class="text-gray-600 font-medium">플랫폼:</div>
-                            <div class="col-span-2 text-gray-800" id="profilePlatform">Rotarl Caveduck Moebius with ZETA 가타/</div>
+                            <div class="col-span-2 text-gray-800" id="profilePlatform"></div>
                         </div>
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
@@ -730,7 +668,7 @@
             updateTagTextColor('#6b21a8');
             renderTags();
             
-            // 각 섹션의 기본값 설정
+            // 각 섹션의 기본값 설정 (지뢰와 플랫폼 제외)
             const defaultValues = {
                 'accountStatus': ['블락', '블언블', '언팔'],
                 'speechType': ['무시가능', '직멘제외무시가능', '무시불가능'],
