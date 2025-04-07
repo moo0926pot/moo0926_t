@@ -64,6 +64,15 @@
             border-color: #d8b4fe;
         }
         
+        /* 상세 정보 정렬 조정 - 왼쪽 정렬 개선 */
+        .info-grid {
+            grid-template-columns: 1fr 2fr;
+        }
+        
+        .info-label {
+            padding-right: 8px;
+        }
+        
         /* 반응형 레이아웃 */
         @media (min-width: 768px) {
             .container {
@@ -88,26 +97,50 @@
         <div class="w-full md:w-1/3 p-4 bg-white border-r border-gray-200 overflow-y-auto">
             <h1 class="text-xl font-bold mb-6">자기소개표 생성기</h1>
             
-            <!-- 테마 색상 설정 -->
+            <!-- 테마 색상 설정 - 접기/펴기 가능하도록 수정 -->
             <div class="mb-6">
-                <h2 class="text-lg font-semibold mb-3">테마 색상 설정</h2>
-                <div class="grid grid-cols-3 gap-0 mb-4">
-                    <div class="flex flex-col items-center">
-                        <label class="block text-sm font-medium mb-1 text-center">헤더 색상</label>
-                        <input type="color" id="headerColor" value="#d8b4fe" class="h-10 w-16">
-                        <span class="text-xs text-gray-500 mt-1" id="headerColorText">#d8b4fe</span>
+                <button 
+                    class="flex items-center justify-between w-full text-lg font-semibold mb-3 bg-gray-100 p-2 rounded"
+                    onclick="toggleSection('themeSection')"
+                >
+                    <span>테마 색상 설정</span>
+                    <svg id="themeToggleIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transform transition-transform">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                
+                <div id="themeSection">
+                    <!-- 헤더 제목 설정 추가 -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-1">헤더 제목</label>
+                        <input 
+                            type="text" 
+                            id="headerTitle" 
+                            value="AI Chat 자기소개표" 
+                            placeholder="헤더 제목을 입력하세요" 
+                            class="w-full p-2 border border-gray-300 rounded mb-2"
+                            oninput="updateHeaderTitle(this.value)"
+                        >
                     </div>
                     
-                    <div class="flex flex-col items-center">
-                        <label class="block text-sm font-medium mb-1 text-center">태그 배경 색상</label>
-                        <input type="color" id="tagColor" value="#f3e8ff" class="h-10 w-16">
-                        <span class="text-xs text-gray-500 mt-1" id="tagColorText">#f3e8ff</span>
-                    </div>
-                    
-                    <div class="flex flex-col items-center">
-                        <label class="block text-sm font-medium mb-1 text-center">태그 텍스트 색상</label>
-                        <input type="color" id="tagTextColor" value="#6b21a8" class="h-10 w-16">
-                        <span class="text-xs text-gray-500 mt-1" id="tagTextColorText">#6b21a8</span>
+                    <div class="grid grid-cols-3 gap-0 mb-4">
+                        <div class="flex flex-col items-center">
+                            <label class="block text-sm font-medium mb-1 text-center">헤더 색상</label>
+                            <input type="color" id="headerColor" value="#d8b4fe" class="h-10 w-16">
+                            <span class="text-xs text-gray-500 mt-1" id="headerColorText">#d8b4fe</span>
+                        </div>
+                        
+                        <div class="flex flex-col items-center">
+                            <label class="block text-sm font-medium mb-1 text-center">태그 배경 색상</label>
+                            <input type="color" id="tagColor" value="#f3e8ff" class="h-10 w-16">
+                            <span class="text-xs text-gray-500 mt-1" id="tagColorText">#f3e8ff</span>
+                        </div>
+                        
+                        <div class="flex flex-col items-center">
+                            <label class="block text-sm font-medium mb-1 text-center">태그 텍스트 색상</label>
+                            <input type="color" id="tagTextColor" value="#6b21a8" class="h-10 w-16">
+                            <span class="text-xs text-gray-500 mt-1" id="tagTextColorText">#6b21a8</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,8 +170,7 @@
                                 class="w-full p-2 border border-gray-300 rounded"
                             >
                             <p class="text-xs text-gray-500 mt-1">프로필 이미지로 사용할 이미지의 URL을 입력하세요.</p>
-  <p class="text-xs text-gray-500 mt-1">이미지 권장 사이즈: 800*120~250px(가로*세로)</p>
-
+                            <p class="text-xs text-gray-500 mt-1">이미지 권장 사이즈: 100x100px</p>
                         </div>
                     </div>
                     
@@ -155,6 +187,7 @@
                             >
                             <p class="text-xs text-gray-500 mt-1">배경 이미지로 사용할 이미지의 URL을 입력하세요.</p>
                             <p class="text-xs text-blue-500 mt-1">※ 배경 이미지는 프로필 섹션 전체에 적용됩니다.</p>
+                            <p class="text-xs text-gray-500 mt-1">이미지 권장 사이즈: 800x120~250px(가로x세로)</p>
                         </div>
                         
                         <div class="mb-3">
@@ -441,41 +474,41 @@
                         </div>
                     </div>
                     
-                    <!-- 상세 정보 섹션 -->
+                    <!-- 상세 정보 섹션 - 정렬 조정 -->
                     <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
-                        <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">관계 정리:</div>
-                            <div class="col-span-2 text-gray-800" id="profileAccountStatus"></div>
+                        <div class="grid info-grid gap-2 mb-2">
+                            <div class="text-gray-600 font-medium info-label">관계 정리:</div>
+                            <div class="text-gray-800" id="profileAccountStatus"></div>
                         </div>
                         
-                        <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">지뢰:</div>
-                            <div class="col-span-2 text-gray-800" id="profileSinic"></div>
+                        <div class="grid info-grid gap-2 mb-2">
+                            <div class="text-gray-600 font-medium info-label">지뢰:</div>
+                            <div class="text-gray-800" id="profileSinic"></div>
                         </div>
                         
-                        <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">지뢰 대응:</div>
-                            <div class="col-span-2 text-gray-800" id="profileSpeechType"></div>
+                        <div class="grid info-grid gap-2 mb-2">
+                            <div class="text-gray-600 font-medium info-label">지뢰 대응:</div>
+                            <div class="text-gray-800" id="profileSpeechType"></div>
                         </div>
                         
-                        <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">트윗 성향:</div>
-                            <div class="col-span-2 text-gray-800" id="profileTweetStyle"></div>
+                        <div class="grid info-grid gap-2 mb-2">
+                            <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
+                            <div class="text-gray-800" id="profileTweetStyle"></div>
                         </div>
                         
-                        <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">성향:</div>
-                            <div class="col-span-2 text-gray-800" id="profilePlayStyle"></div>
+                        <div class="grid info-grid gap-2 mb-2">
+                            <div class="text-gray-600 font-medium info-label">성향:</div>
+                            <div class="text-gray-800" id="profilePlayStyle"></div>
                         </div>
                         
-                        <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">플랫폼:</div>
-                            <div class="col-span-2 text-gray-800" id="profilePlatform"></div>
+                        <div class="grid info-grid gap-2 mb-2">
+                            <div class="text-gray-600 font-medium info-label">플랫폼:</div>
+                            <div class="text-gray-800" id="profilePlatform"></div>
                         </div>
                         
-                        <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">CP 성향:</div>
-                            <div class="col-span-2 text-gray-800" id="profileCpPreference"></div>
+                        <div class="grid info-grid gap-2 mb-2">
+                            <div class="text-gray-600 font-medium info-label">CP 성향:</div>
+                            <div class="text-gray-800" id="profileCpPreference"></div>
                         </div>
                     </div>
                     
@@ -506,7 +539,8 @@
                 headerColor: '#d8b4fe',
                 tagColor: '#f3e8ff',
                 tagTextColor: '#6b21a8'
-            }
+            },
+            headerTitle: 'AI Chat 자기소개표'
         };
         
         // 페이지 로드 시 초기화
@@ -536,6 +570,12 @@
                 section.classList.add('hidden');
                 toggleIcon.classList.remove('rotate-180');
             }
+        }
+        
+        // 헤더 제목 업데이트 함수
+        function updateHeaderTitle(title) {
+            appState.headerTitle = title;
+            document.getElementById('cardHeader').textContent = title;
         }
         
         // 색상 선택기 초기화
@@ -667,6 +707,9 @@
             
             updateColorPicker('tagColor', document.getElementById('tagColor').value, null);
             updateColorPicker('tagTextColor', document.getElementById('tagTextColor').value, null);
+            
+            // 헤더 제목 업데이트
+            updateHeaderTitle(document.getElementById('headerTitle').value);
             
             // 이미지 업데이트
             updateProfileImage();
@@ -843,4 +886,3 @@
             }, 3000);
         }
     </script>
-    
