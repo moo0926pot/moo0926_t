@@ -368,6 +368,41 @@
                 </button>
                 
                 <div id="detailSection">
+                    <!-- 팔로우 안내 - 수정된 선택 방식 -->
+                    <div class="setting-item">
+                        <label class="setting-label">팔로우 안내</label>
+                        <div class="flex flex-wrap gap-2" id="followOptions">
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
+                                data-target="followType" 
+                                data-value="멘션"
+                                onclick="toggleOption(this)"
+                            >
+                                멘션
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
+                                data-target="followType" 
+                                data-value="마음"
+                                onclick="toggleOption(this)"
+                            >
+                                마음
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
+                                data-target="followType" 
+                                data-value="RT"
+                                onclick="toggleOption(this)"
+                            >
+                                RT
+                            </button>
+                        </div>
+                        <input type="hidden" id="followType" value="멘션,마음,RT">
+                    </div>
+                    
                     <!-- 연령 선택 -->
                     <div class="setting-item">
                         <label class="setting-label">연령</label>
@@ -401,99 +436,6 @@
                             </button>
                         </div>
                         <input type="hidden" id="age" value="성인">
-                    </div>
-                    
-                    <!-- 관계 정리 -->
-                    <div class="setting-item">
-                        <label class="setting-label">관계 정리</label>
-                        <div class="flex flex-wrap gap-2" id="accountStatusOptions">
-                            <button 
-                                type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
-                                data-target="accountStatus" 
-                                data-value="블락"
-                                onclick="toggleOption(this)"
-                            >
-                                블락
-                            </button>
-                            <button 
-                                type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
-                                data-target="accountStatus" 
-                                data-value="블언블"
-                                onclick="toggleOption(this)"
-                            >
-                                블언블
-                            </button>
-                            <button 
-                                type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
-                                data-target="accountStatus" 
-                                data-value="언팔"
-                                onclick="toggleOption(this)"
-                            >
-                                언팔
-                            </button>
-                        </div>
-                        <input type="hidden" id="accountStatus" value="블락,블언블,언팔">
-                    </div>
-                    
-                    <!-- 팔로우 안내 텍스트 - 상세 정보로 이동 -->
-                    <div class="setting-item">
-                        <label class="setting-label">팔로우 안내</label>
-                        <input 
-                            type="text" 
-                            id="followGuide" 
-                            placeholder="(멘션 마음 RT) 하면 팔로우합니다." 
-                            value="(멘션 마음 RT) 하면 팔로우합니다." 
-                            class="w-full p-2 border border-gray-300 rounded"
-                        >
-                    </div>
-                    
-                    <!-- 지뢰 (텍스트 입력) -->
-                    <div class="setting-item">
-                        <label class="setting-label">지뢰</label>
-                        <input 
-                            type="text" 
-                            id="sinic" 
-                            placeholder="지뢰가 되는 요소를 입력하세요" 
-                            class="w-full p-2 border border-gray-300 rounded"
-                        >
-                    </div>
-                    
-                    <!-- 지뢰 대응 - 토글 버튼으로 변경 -->
-                    <div class="setting-item">
-                        <label class="setting-label">지뢰 대응</label>
-                        <div class="flex flex-wrap gap-2" id="speechTypeOptions">
-                            <button 
-                                type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
-                                data-target="speechType" 
-                                data-value="무시가능"
-                                onclick="toggleSingleOption(this, 'speechTypeOptions')"
-                            >
-                                무시가능
-                            </button>
-                            <button 
-                                type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                                data-target="speechType" 
-                                data-value="직멘제외무시가능"
-                                onclick="toggleSingleOption(this, 'speechTypeOptions')"
-                            >
-                                직멘제외무시가능
-                            </button>
-                            <button 
-                                type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                                data-target="speechType" 
-                                data-value="무시불가능"
-                                onclick="toggleSingleOption(this, 'speechTypeOptions')"
-                            >
-                                무시불가능
-                            </button>
-                        </div>
-                        <input type="hidden" id="speechType" value="무시가능">
                     </div>
                     
                     <!-- 트윗 성향 -->
@@ -549,6 +491,87 @@
                             <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="cpPreference" data-value="논리버시블" onclick="toggleOption(this)">논리버시블</button>
                         </div>
                         <input type="hidden" id="cpPreference" value="HL,BL,GL,ALL,NCP,리버시블,논리버시블">
+                    </div>
+                    
+                    <!-- 관계 정리 -->
+                    <div class="setting-item">
+                        <label class="setting-label">관계 정리</label>
+                        <div class="flex flex-wrap gap-2" id="accountStatusOptions">
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
+                                data-target="accountStatus" 
+                                data-value="블락"
+                                onclick="toggleOption(this)"
+                            >
+                                블락
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
+                                data-target="accountStatus" 
+                                data-value="블언블"
+                                onclick="toggleOption(this)"
+                            >
+                                블언블
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
+                                data-target="accountStatus" 
+                                data-value="언팔"
+                                onclick="toggleOption(this)"
+                            >
+                                언팔
+                            </button>
+                        </div>
+                        <input type="hidden" id="accountStatus" value="블락,블언블,언팔">
+                    </div>
+                    
+                    <!-- 지뢰 (텍스트 입력) -->
+                    <div class="setting-item">
+                        <label class="setting-label">지뢰</label>
+                        <input 
+                            type="text" 
+                            id="sinic" 
+                            placeholder="지뢰가 되는 요소를 입력하세요" 
+                            class="w-full p-2 border border-gray-300 rounded"
+                        >
+                    </div>
+                    
+                    <!-- 지뢰 대응 - 토글 버튼으로 변경 -->
+                    <div class="setting-item">
+                        <label class="setting-label">지뢰 대응</label>
+                        <div class="flex flex-wrap gap-2" id="speechTypeOptions">
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
+                                data-target="speechType" 
+                                data-value="무시가능"
+                                onclick="toggleSingleOption(this, 'speechTypeOptions')"
+                            >
+                                무시가능
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="speechType" 
+                                data-value="직멘제외무시가능"
+                                onclick="toggleSingleOption(this, 'speechTypeOptions')"
+                            >
+                                직멘제외무시가능
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="speechType" 
+                                data-value="무시불가능"
+                                onclick="toggleSingleOption(this, 'speechTypeOptions')"
+                            >
+                                무시불가능
+                            </button>
+                        </div>
+                        <input type="hidden" id="speechType" value="무시가능">
                     </div>
                 </div>
             </div>
@@ -633,14 +656,19 @@
                                     <div class="text-sm text-gray-600 mb-3" id="profileBio">
                                         자신을 간단히 소개해주세요.
                                     </div>
-                                    <div class="follow-guide mb-3" id="profileFollowGuide">
-                                        (멘션 마음 RT) 하면 팔로우합니다.
-                                    </div>
                                 </div>
                                 
                                 <!-- 상세 정보 그리드 - 프로필 아래로 이동 -->
                                 <div class="w-full mt-2">
                                     <div class="grid grid-cols-1 gap-2">
+                                        <!-- 팔로우 안내 - 네모 박스로 통일 -->
+                                        <div class="p-2 border border-gray-200 rounded bg-white">
+                                            <div class="info-grid">
+                                                <div class="text-gray-600 font-medium info-label">팔로우 안내:</div>
+                                                <div class="text-gray-800" id="profileFollowGuide">멘션,마음,RT 하면 팔로우합니다.</div>
+                                            </div>
+                                        </div>
+                                        
                                         <!-- 연령 -->
                                         <div class="p-2 border border-gray-200 rounded bg-white">
                                             <div class="info-grid">
@@ -909,6 +937,22 @@
             
             // 업데이트된 값 저장
             hiddenInput.value = values.join(',');
+            
+            // 팔로우 안내 특별 처리
+            if (target === 'followType') {
+                updateFollowGuide(values);
+            }
+        }
+
+        // 팔로우 안내 텍스트 업데이트
+        function updateFollowGuide(values) {
+            let followText = '';
+            if (values.length > 0) {
+                followText = values.join(',') + ' 하면 팔로우합니다.';
+            } else {
+                followText = '하면 팔로우합니다.';
+            }
+            document.getElementById('profileFollowGuide').textContent = followText;
         }
 
         // 섹션 토글
@@ -1077,7 +1121,6 @@
             const fields = [
                 { inputId: 'nickname', outputId: 'profileName', defaultText: '닉네임 (@아이디)' },
                 { inputId: 'bio', outputId: 'profileBio', defaultText: '자신을 간단히 소개해주세요.' },
-                { inputId: 'followGuide', outputId: 'profileFollowGuide', defaultText: '(멘션 마음 RT) 하면 팔로우합니다.' },
                 { inputId: 'age', outputId: 'profileAge', defaultText: '성인' },
                 { inputId: 'accountStatus', outputId: 'profileAccountStatus' },
                 { inputId: 'sinic', outputId: 'profileSinic' },
@@ -1095,6 +1138,10 @@
                     outputElement.textContent = value || field.defaultText || '';
                 }
             });
+            
+            // 팔로우 안내 특별 처리
+            const followTypeValue = document.getElementById('followType').value;
+            updateFollowGuide(followTypeValue ? followTypeValue.split(',') : []);
             
             // 태그 업데이트
             renderTags();
