@@ -86,10 +86,10 @@
         .info-grid {
             display: grid;
             grid-template-columns: 5rem 1fr;
-            align-items: flex-start;
+            align-items: center;
             gap: 0.25rem;
             line-height: 1.5;
-            margin-bottom: 0.5rem;
+            min-height: 32px;
         }
 
         .info-label {
@@ -181,9 +181,21 @@
         /* 지뢰 대응 스타일 */
         .mine-response {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             margin-bottom: 0.5rem;
+            height: 32px;
+        }
+        
+        .mine-label {
+            font-weight: 500;
+            color: #4b5563;
+            width: 4rem;
+        }
+        
+        .mine-value {
+            color: #111827;
+            flex-grow: 1;
         }
         
         .mine-response-value {
@@ -665,7 +677,7 @@
                                         <div class="p-2 border border-gray-200 rounded bg-white">
                                             <div class="info-grid">
                                                 <div class="text-gray-600 font-medium info-label">팔로우 안내:</div>
-                                                <div class="text-gray-800" id="profileFollowGuide">멘션,마음,RT 하면 팔로우합니다.</div>
+                                                <div class="text-gray-800" id="profileFollowGuide">멘션, 마음, RT 하면 팔로우합니다.</div>
                                             </div>
                                         </div>
                                         
@@ -681,7 +693,7 @@
                                         <div class="p-2 border border-gray-200 rounded bg-white">
                                             <div class="info-grid">
                                                 <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
-                                                <div class="text-gray-800" id="profileTweetStyle">일상,RT,타장르언급,욕설,우울,R18,폭력성,고어,탐라대화,마음요정,인용대화</div>
+                                                <div class="text-gray-800" id="profileTweetStyle">일상, RT, 타장르언급, 욕설, 우울, R18, 폭력성, 고어, 탐라대화, 마음요정, 인용대화</div>
                                             </div>
                                         </div>
                                         
@@ -689,7 +701,7 @@
                                         <div class="p-2 border border-gray-200 rounded bg-white">
                                             <div class="info-grid">
                                                 <div class="text-gray-600 font-medium info-label">성향:</div>
-                                                <div class="text-gray-800" id="profilePlayStyle">제작자,소비자</div>
+                                                <div class="text-gray-800" id="profilePlayStyle">제작자, 소비자</div>
                                             </div>
                                         </div>
                                         
@@ -705,7 +717,7 @@
                                         <div class="p-2 border border-gray-200 rounded bg-white">
                                             <div class="info-grid">
                                                 <div class="text-gray-600 font-medium info-label">CP 성향:</div>
-                                                <div class="text-gray-800" id="profileCpPreference">HL,BL,GL,ALL,NCP,리버시블,논리버시블</div>
+                                                <div class="text-gray-800" id="profileCpPreference">HL, BL, GL, ALL, NCP, 리버시블, 논리버시블</div>
                                             </div>
                                         </div>
                                         
@@ -713,7 +725,7 @@
                                         <div class="p-2 border border-gray-200 rounded bg-white">
                                             <div class="info-grid">
                                                 <div class="text-gray-600 font-medium info-label">관계 정리:</div>
-                                                <div class="text-gray-800" id="profileAccountStatus">블락,블언블,언팔</div>
+                                                <div class="text-gray-800" id="profileAccountStatus">블락, 블언블, 언팔</div>
                                             </div>
                                         </div>
                                     </div>
@@ -726,10 +738,10 @@
                             <!-- 지뢰 및 지뢰 대응 섹션 -->
                             <div class="w-full mb-4">
                                 <div class="mine-response">
-                                    <div class="text-gray-600 font-medium">지뢰:</div>
+                                    <div class="mine-label">지뢰:</div>
+                                    <div class="mine-value" id="profileSinic"></div>
                                     <div class="mine-response-value" id="profileSpeechType">무시가능</div>
                                 </div>
-                                <div class="text-gray-800" id="profileSinic"></div>
                             </div>
                             
                             <!-- 태그 섹션 -->
@@ -935,8 +947,13 @@
                 button.style.borderColor = appState.colors.headerColor;
             }
             
-            // 업데이트된 값 저장
-            hiddenInput.value = values.join(',');
+            // 업데이트된 값 저장 - 쉼표와 공백으로 구분
+            hiddenInput.value = values.join(', ');
+            
+            // 값이 비어있으면 쉼표 제거
+            if (hiddenInput.value === '') {
+                hiddenInput.value = '';
+            }
             
             // 팔로우 안내 특별 처리
             if (target === 'followType') {
@@ -948,7 +965,7 @@
         function updateFollowGuide(values) {
             let followText = '';
             if (values.length > 0) {
-                followText = values.join(',') + ' 하면 팔로우합니다.';
+                followText = values.join(', ') + ' 하면 팔로우합니다.';
             } else {
                 followText = '하면 팔로우합니다.';
             }
@@ -1141,7 +1158,7 @@
             
             // 팔로우 안내 특별 처리
             const followTypeValue = document.getElementById('followType').value;
-            updateFollowGuide(followTypeValue ? followTypeValue.split(',') : []);
+            updateFollowGuide(followTypeValue ? followTypeValue.split(',').map(item => item.trim()) : []);
             
             // 태그 업데이트
             renderTags();
