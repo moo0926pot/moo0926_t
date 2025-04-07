@@ -535,11 +535,36 @@
                                     </div>
                                 </div>
                                 
-                                <!-- 태그 섹션 -->
+                                <!-- 상세 정보 그리드 - 프로필 아래로 이동 -->
                                 <div class="w-full mt-2">
-                                    <div class="text-gray-600 font-medium mb-2 text-center">선호 태그:</div>
-                                    <div class="flex flex-wrap justify-center" id="profileTags">
-                                        <!-- 태그 목록이 여기에 추가됩니다 -->
+                                    <div class="grid grid-cols-1 gap-2">
+                                        <div class="p-2 border border-gray-200 rounded bg-white">
+                                            <div class="info-grid">
+                                                <div class="text-gray-600 font-medium info-label">관계 정리:</div>
+                                                <div class="text-gray-800" id="profileAccountStatus">블락,블언블,언팔</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="p-2 border border-gray-200 rounded bg-white">
+                                            <div class="info-grid">
+                                                <div class="text-gray-600 font-medium info-label">지뢰:</div>
+                                                <div class="text-gray-800" id="profileSinic"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="p-2 border border-gray-200 rounded bg-white">
+                                            <div class="info-grid">
+                                                <div class="text-gray-600 font-medium info-label">지뢰 대응:</div>
+                                                <div class="text-gray-800" id="profileSpeechType">무시가능,직멘제외무시가능,무시불가능</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="p-2 border border-gray-200 rounded bg-white">
+                                            <div class="info-grid">
+                                                <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
+                                                <div class="text-gray-800" id="profileTweetStyle">일상,RT,타장르언급,욕설,우울,R18,폭력성,고어,탐라대화,마음요정,인용대화</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -547,8 +572,8 @@
                         
                         <!-- 우측 정보 영역 -->
                         <div class="profile-right">
-                            <!-- 상세 정보 그리드 -->
-                            <div class="details-grid">
+                            <!-- 상세 정보 그리드의 나머지 -->
+                            <div class="details-grid mb-4">
                                 <div class="p-2 border border-gray-200 rounded bg-white">
                                     <div class="info-grid">
                                         <div class="text-gray-600 font-medium info-label">성향:</div>
@@ -568,6 +593,14 @@
                                         <div class="text-gray-600 font-medium info-label">CP 성향:</div>
                                         <div class="text-gray-800" id="profileCpPreference">HL,BL,GL,ALL,NCP,리버시블,논리버시블</div>
                                     </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 태그 섹션 - 우측으로 이동 -->
+                            <div class="w-full">
+                                <div class="text-gray-600 font-medium mb-2">선호 태그:</div>
+                                <div class="flex flex-wrap gap-2" id="profileTags">
+                                    <!-- 태그 목록이 여기에 추가됩니다 -->
                                 </div>
                             </div>
                         </div>
