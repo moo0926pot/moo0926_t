@@ -86,18 +86,28 @@
         }
         
         /* 상세 정보 영역 - 간격 조정 */
-        .info-grid {
-            display: grid;
-            grid-template-columns: 4.5rem 1fr; /* 라벨 부분 너비 줄이고 내용 부분 확장 */
-            align-items: center;
-            gap: 0.25rem; /* 라벨과 값 사이 간격 더 줄임 */
-        }
-        
-        .info-label {
-            padding-right: 4px;
-            white-space: nowrap; /* 라벨 텍스트 줄바꿈 방지 */
-        }
-        
+       .info-grid {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr; /* 라벨 부분 너비 유지 */
+    align-items: flex-start; /* 상단 정렬로 변경 */
+    gap: 0.25rem; /* 간격 유지 */
+    line-height: 1.5; /* 일관된 줄 높이 설정 */
+    margin-bottom: 0.5rem; /* 항목 간 간격 일관되게 */
+}
+
+.info-label {
+    padding-right: 2px;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    line-height: 1.5; /* 라벨에도 동일한 줄 높이 적용 */
+}
+
+/* 내용 부분 스타일 추가 */
+.info-grid > div:nth-child(2) {
+    line-height: 1.5; /* 내용 부분에도 동일한 줄 높이 적용 */
+    padding-top: 1px; /* 미세 조정 */
+}
+
         /* 헤더 텍스트 위치 조정 */
         #cardHeader {
             display: flex;
