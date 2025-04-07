@@ -7,6 +7,27 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
+
+    #profileTags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+    }
+    
+    .tag-item {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        line-height: 1.2;
+        text-align: center;
+        margin: 2px;
+    }
+
+
         /* 기본 레이아웃 스타일 */
         .container {
             max-width: 1200px;
@@ -778,27 +799,26 @@ function renderTags() {
         tagList.appendChild(tagElement);
         
         // 미리보기 태그 목록에 추가
-        const previewTagElement = document.createElement('div');
+        const previewTagElement = document.createElement('span'); // div에서 span으로 변경
+        previewTagElement.className = 'tag-item';
         previewTagElement.textContent = tag;
-        previewTagElement.setAttribute('style', `
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 28px;
-            width: auto;
-            padding: 0 12px;
-            background-color: ${tagBgColor};
-            color: ${tagTextColor};
-            font-size: 14px;
-            font-family: sans-serif;
-            border-radius: 8px;
-            box-sizing: border-box;
-            line-height: 28px; /* ✅ 추가됨: 텍스트 수직 정렬 해결 */
-        `);
+        
+        // 인라인 스타일 적용 (중앙 정렬 강화)
+        previewTagElement.style.display = 'inline-flex'; // flex에서 inline-flex로 변경
+        previewTagElement.style.alignItems = 'center';
+        previewTagElement.style.justifyContent = 'center';
+        previewTagElement.style.backgroundColor = tagBgColor;
+        previewTagElement.style.color = tagTextColor;
+        previewTagElement.style.padding = '4px 12px';
+        previewTagElement.style.margin = '4px';
+        previewTagElement.style.borderRadius = '8px';
+        previewTagElement.style.fontSize = '14px';
+        previewTagElement.style.lineHeight = '1.2'; // 라인 높이 추가
+        previewTagElement.style.textAlign = 'center'; // 텍스트 정렬 추가
+        
         profileTags.appendChild(previewTagElement);
     });
 }
-
 // 프로필 이미지 업데이트
 function updateProfileImage() {
     const imageUrl = document.getElementById('profileImageUrl').value.trim();
