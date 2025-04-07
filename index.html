@@ -294,10 +294,10 @@
                 </div>
             </div>
             
-<!-- 텍스트 크기 설정 - 새로 추가 -->
+<!-- 텍스트 크기 설정 - 세분화 -->
 <div class="setting-item mt-4">
-    <label class="setting-label">텍스트 크기 조절</label>
-    <div class="flex items-center gap-2">
+    <label class="setting-label">전체 텍스트 크기 조절</label>
+    <div class="flex items-center gap-2 mb-2">
         <input 
             type="range" 
             id="textSizeSlider" 
@@ -313,6 +313,46 @@
             value="100%" 
             class="w-16 p-1 border border-gray-300 rounded text-center"
             onchange="updateTextSizeFromInput(this.value)"
+        >
+    </div>
+
+    <label class="setting-label">헤더 제목 크기 조절</label>
+    <div class="flex items-center gap-2 mb-2">
+        <input 
+            type="range" 
+            id="headerSizeSlider" 
+            min="70" 
+            max="150" 
+            value="100" 
+            class="flex-grow"
+            oninput="updateHeaderSize(this.value); document.getElementById('headerSizeInput').value = this.value + '%';"
+        >
+        <input 
+            type="text" 
+            id="headerSizeInput" 
+            value="100%" 
+            class="w-16 p-1 border border-gray-300 rounded text-center"
+            onchange="updateHeaderSizeFromInput(this.value)"
+        >
+    </div>
+
+    <label class="setting-label">닉네임/아이디 크기 조절</label>
+    <div class="flex items-center gap-2">
+        <input 
+            type="range" 
+            id="nicknameSizeSlider" 
+            min="70" 
+            max="150" 
+            value="100" 
+            class="flex-grow"
+            oninput="updateNicknameSize(this.value); document.getElementById('nicknameSizeInput').value = this.value + '%';"
+        >
+        <input 
+            type="text" 
+            id="nicknameSizeInput" 
+            value="100%" 
+            class="w-16 p-1 border border-gray-300 rounded text-center"
+            onchange="updateNicknameSizeFromInput(this.value)"
         >
     </div>
 </div>
@@ -792,18 +832,25 @@ const appState = {
         tagTextColor: '#8C6717'       // 태그 텍스트 색상 변경
     },
     headerTitle: 'AI Chat 자기소개표',
-    textSize: '100'                  // 텍스트 크기 (퍼센트)
+    textSize: '100',         // 전체 텍스트 크기 (퍼센트)
+    headerSize: '100',       // 헤더 제목 크기 (퍼센트)
+    nicknameSize: '100'      // 닉네임/아이디 크기 (퍼센트)
 };
 
-// 텍스트 크기 설정 관련 함수
-
-// 슬라이더로 텍스트 크기 업데이트
+// 전체 텍스트 크기 업데이트
 function updateTextSize(sizePercent) {
     const size = parseInt(sizePercent) / 100;
     
     // 프로필 카드에 텍스트 크기 스케일 적용
     const profileCard = document.getElementById('profileCard');
     profileCard.style.fontSize = `${size}rem`;
+    
+    // 지뢰 대응 항목값도 텍스트 크기에 포함되도록 함
+    const mineResponseValue = document.getElementById('profileSpeechType');
+    if (mineResponseValue) {
+        // 지뢰 대응 항목의 크기도 조절되도록 클래스 설정
+        mineResponseValue.style.fontSize = '1em'; // 상대 크기로 설정하여 전체 텍스트 크기에 따라 변경되도록 함
+    }
     
     // 현재 텍스트 크기를 appState에 저장
     appState.textSize = sizePercent;
@@ -828,13 +875,80 @@ function updateTextSizeFromInput(value) {
     updateTextSize(sizePercent);
 }
 
+// 헤더 제목 크기 업데이트
+function updateHeaderSize(sizePercent) {
+    const size = parseInt(sizePercent) / 100;
+    
+    // 헤더 제목에 크기 적용
+    const cardHeader = document.getElementById('cardHeader');
+    // 기본 텍스트 크기(1.25rem)에 비례하여 조정
+    cardHeader.style.fontSize = `${1.25 * size}rem`;
+    
+    // 현재 헤더 크기를 appState에 저장
+    appState.headerSize = sizePercent;
+}
+
+// 입력 필드로 헤더 크기 업데이트
+function updateHeaderSizeFromInput(value) {
+    // '%' 기호 제거하고 숫자만 추출
+    let sizePercent = parseInt(value.replace('%', ''));
+    
+    // 범위 제한 (70% ~ 150%)
+    if (isNaN(sizePercent)) sizePercent = 100;
+    sizePercent = Math.min(150, Math.max(70, sizePercent));
+    
+    // 슬라이더 값 업데이트
+    document.getElementById('headerSizeSlider').value = sizePercent;
+    
+    // 입력 필드 값 형식화
+    document.getElementById('headerSizeInput').value = sizePercent + '%';
+    
+    // 헤더 크기 적용
+    updateHeaderSize(sizePercent);
+}
+
+// 닉네임/아이디 크기 업데이트
+function updateNicknameSize(sizePercent) {
+    const size = parseInt(sizePercent) / 100;
+    
+    // 닉네임/아이디에 크기 적용
+    const profileName = document.getElementById('profileName');
+    // 기본 텍스트 크기(1rem)에 비례하여 조정
+    profileName.style.fontSize = `${1.1 * size}rem`;
+    profileName.style.fontWeight = 'bold';
+    
+    // 현재 닉네임 크기를 appState에 저장
+    appState.nicknameSize = sizePercent;
+}
+
+// 입력 필드로 닉네임 크기 업데이트
+function updateNicknameSizeFromInput(value) {
+    // '%' 기호 제거하고 숫자만 추출
+    let sizePercent = parseInt(value.replace('%', ''));
+    
+    // 범위 제한 (70% ~ 150%)
+    if (isNaN(sizePercent)) sizePercent = 100;
+    sizePercent = Math.min(150, Math.max(70, sizePercent));
+    
+    // 슬라이더 값 업데이트
+    document.getElementById('nicknameSizeSlider').value = sizePercent;
+    
+    // 입력 필드 값 형식화
+    document.getElementById('nicknameSizeInput').value = sizePercent + '%';
+    
+    // 닉네임 크기 적용
+    updateNicknameSize(sizePercent);
+}
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
     initColorPickers();
     renderTags();
     
-    // 텍스트 크기 초기화 (페이지 로드 시) - 이 줄 추가
+    // 텍스트 크기 초기화 (페이지 로드 시)
     updateTextSize(appState.textSize);
+    updateHeaderSize(appState.headerSize);
+    updateNicknameSize(appState.nicknameSize);
+    
 
     // 프로필 및 배경 이미지 URL 설정 후 자동 로드
     document.getElementById('profileImageUrl').value = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkGHVkHhOalIBxWeuKVuV-8T4hGPXVBIgTNw&s";
