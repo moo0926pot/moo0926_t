@@ -174,17 +174,18 @@
             margin-top: 0.5rem;
         }
         
-        /* 지뢰 대응 스타일 - 오른쪽 정렬 */
+        /* 지뢰 대응 스타일 */
         .mine-response {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 0.5rem;
         }
         
-        .mine-response-wrapper {
+        .mine-response-value {
             text-align: right;
             color: #666;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
         }
     </style>
 </head>
@@ -429,11 +430,37 @@
                         >
                     </div>
                     
-                    <!-- 지뢰 대응 -->
+                    <!-- 지뢰 대응 - 토글 버튼으로 변경 -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium mb-2">지뢰 대응</label>
                         <div class="flex flex-wrap gap-2" id="speechTypeOptions">
-                            <!-- 이 부분은 JavaScript로 동적 생성됩니다 -->
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
+                                data-target="speechType" 
+                                data-value="무시가능"
+                                onclick="toggleSingleOption(this, 'speechTypeOptions')"
+                            >
+                                무시가능
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="speechType" 
+                                data-value="직멘제외무시가능"
+                                onclick="toggleSingleOption(this, 'speechTypeOptions')"
+                            >
+                                직멘제외무시가능
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="speechType" 
+                                data-value="무시불가능"
+                                onclick="toggleSingleOption(this, 'speechTypeOptions')"
+                            >
+                                무시불가능
+                            </button>
                         </div>
                         <input type="hidden" id="speechType" value="무시가능">
                     </div>
@@ -637,18 +664,16 @@
                         
                         <!-- 우측 정보 영역 -->
                         <div class="profile-right">
-                            <!-- 지뢰 섹션 - 첫 번째로 배치 -->
-                            <div class="w-full mb-4 p-3 border border-gray-200 rounded bg-white">
+                            <!-- 지뢰 및 지뢰 대응 섹션 -->
+                            <div class="w-full mb-4">
                                 <div class="mine-response">
                                     <div class="text-gray-600 font-medium">지뢰:</div>
-                                    <div class="mine-response-wrapper">
-                                        (<span id="profileSpeechType">무시가능</span>)
-                                    </div>
+                                    <div class="mine-response-value" id="profileSpeechType">무시가능</div>
                                 </div>
-                                <div class="mt-2 text-gray-800" id="profileSinic"></div>
+                                <div class="text-gray-800" id="profileSinic"></div>
                             </div>
                             
-                            <!-- 태그 섹션 - 두 번째로 배치 -->
+                            <!-- 태그 섹션 -->
                             <div class="w-full">
                                 <div class="text-gray-600 font-medium mb-2">선호 태그:</div>
                                 <div class="flex flex-wrap gap-2" id="profileTags">
@@ -683,54 +708,6 @@
             // 엔터키 이벤트
             document.getElementById('newTag').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') addTag();
-            });
-            
-            // 지뢰 대응 옵션 버튼 컨테이너 찾기
-            const speechTypeContainer = document.getElementById('speechTypeOptions');
-            
-            // 컨테이너 내용 비우기
-            speechTypeContainer.innerHTML = '';
-            
-            // 지뢰 대응 옵션 (라디오 버튼으로 변경)
-            const speechTypeOptions = ['무시가능', '직멘제외무시가능', '무시불가능'];
-            
-            speechTypeOptions.forEach((option, index) => {
-                const radioId = `speechType_${index}`;
-                
-                // 라디오 버튼 그룹 생성
-                const radioDiv = document.createElement('div');
-                radioDiv.className = 'flex items-center mr-4';
-                
-                // 라디오 버튼 입력 요소
-                const radioInput = document.createElement('input');
-                radioInput.type = 'radio';
-                radioInput.id = radioId;
-                radioInput.name = 'speechType';
-                radioInput.value = option;
-                radioInput.className = 'mr-1';
-                if (index === 0) radioInput.checked = true; // 첫 번째 옵션을 기본으로 선택
-                
-                // 라디오 버튼 라벨
-                const radioLabel = document.createElement('label');
-                radioLabel.htmlFor = radioId;
-                radioLabel.textContent = option;
-                radioLabel.className = 'text-sm';
-                
-                // 이벤트 리스너 추가 - 라디오 버튼이 변경될 때 값 업데이트
-                radioInput.addEventListener('change', function() {
-                    if (this.checked) {
-                        document.getElementById('speechType').value = this.value;
-                        // 미리보기 즉시 업데이트
-                        document.getElementById('profileSpeechType').textContent = this.value;
-                    }
-                });
-                
-                // 요소들을 div에 추가
-                radioDiv.appendChild(radioInput);
-                radioDiv.appendChild(radioLabel);
-                
-                // div를 컨테이너에 추가
-                speechTypeContainer.appendChild(radioDiv);
             });
             
             // 색상 선택기 이벤트
@@ -784,7 +761,7 @@
             updatePreview();
         });
 
-        // 단일 선택 옵션 토글 (연령처럼 하나만 선택 가능한 경우)
+        // 단일 선택 옵션 토글 (연령, 지뢰 대응처럼 하나만 선택 가능한 경우)
         function toggleSingleOption(button, groupId) {
             const target = button.dataset.target;
             const value = button.dataset.value;
