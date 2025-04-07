@@ -110,18 +110,30 @@
                 </button>
                 
                 <div id="themeSection">
-                    <!-- 헤더 제목 설정 추가 -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">헤더 제목</label>
-                        <input 
-                            type="text" 
-                            id="headerTitle" 
-                            value="AI Chat 자기소개표" 
-                            placeholder="헤더 제목을 입력하세요" 
-                            class="w-full p-2 border border-gray-300 rounded mb-2"
-                            oninput="updateHeaderTitle(this.value)"
-                        >
-                    </div>
+<div class="mb-4">
+    <label class="block text-sm font-medium mb-1">헤더 제목</label>
+    <div class="flex">
+        <input 
+            type="text" 
+            id="headerTitle" 
+            value="AI Chat 자기소개표" 
+            placeholder="헤더 제목을 입력하세요" 
+            class="flex-grow p-2 border border-gray-300 rounded-l"
+            oninput="updateHeaderTitle(this.value)"
+        >
+        <div class="flex flex-col items-center">
+            <label class="block text-sm font-medium mb-1 text-center sr-only">헤더 텍스트 색상</label>
+            <input 
+                type="color" 
+                id="headerTextColor" 
+                value="#FFFFFF" 
+                class="h-full px-2 py-1 border border-gray-300 rounded-r"
+                oninput="updateHeaderTextColor(this.value)"
+            >
+        </div>
+    </div>
+    <p class="text-xs text-gray-500 mt-1">헤더 제목과 텍스트 색상을 설정하세요.</p>
+</div>
                     
                     <div class="grid grid-cols-3 gap-0 mb-4">
                         <div class="flex flex-col items-center">
@@ -525,205 +537,80 @@
     </div>
 
     <script>
-        // 상태 및 설정 관리를 위한 객체
-        const appState = {
-            tags: ['남성', '여성', '기타', '인외', '수인', 'HL', 'BL', 'GL', 'NCP', '시뮬레이션', 'R18', '고어'],
-            defaultOptions: {
-                'accountStatus': ['블락', '블언블', '언팔'],
-                'speechType': ['무시가능', '직멘제외무시가능', '무시불가능'],
-                'tweetStyle': ['일상', 'RT', '타장르언급', '욕설', '우울', 'R18', '폭력성', '고어', '탐라대화', '마음요정', '인용대화'],
-                'playStyle': ['제작자', '소비자'],
-                'cpPreference': ['HL', 'BL', 'GL', 'ALL', 'NCP', '리버시블', '논리버시블']
-            },
-            colors: {
-                headerColor: '#d8b4fe',
-                tagColor: '#f3e8ff',
-                tagTextColor: '#6b21a8'
-            },
-            headerTitle: 'AI Chat 자기소개표'
-        };
-        
-        // 페이지 로드 시 초기화
-        window.onload = function() {
-            // 색상 선택기 초기화
-            initColorPickers();
-            
-            // 태그 렌더링
-            renderTags();
-            
-            // 기본 옵션 설정
-            initDefaultOptions();
-            
-            // 초기 미리보기 업데이트
-            updateProfile();
-        };
-        
-        // 섹션 토글 함수
-        function toggleSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            const toggleIcon = document.getElementById(sectionId.replace('Section', 'ToggleIcon'));
-            
-            if (section.classList.contains('hidden')) {
-                section.classList.remove('hidden');
-                toggleIcon.classList.add('rotate-180');
-            } else {
-                section.classList.add('hidden');
-                toggleIcon.classList.remove('rotate-180');
-            }
-        }
-        
-        // 헤더 제목 업데이트 함수
-        function updateHeaderTitle(title) {
-            appState.headerTitle = title;
-            document.getElementById('cardHeader').textContent = title;
-        }
-        
-        // 색상 선택기 초기화
-        function initColorPickers() {
-            // 헤더 색상 설정
-            updateColorPicker('headerColor', appState.colors.headerColor, (color) => {
-                document.getElementById('cardHeader').style.backgroundColor = color;
-            });
-            
-            // 태그 배경 색상 설정
-            updateColorPicker('tagColor', appState.colors.tagColor, renderTags);
-            
-            // 태그 텍스트 색상 설정
-            updateColorPicker('tagTextColor', appState.colors.tagTextColor, renderTags);
-        }
-        
-        // 색상 선택기 업데이트 함수
-        function updateColorPicker(id, value, callback) {
-            const picker = document.getElementById(id);
-            const text = document.getElementById(id + 'Text');
-            
-            picker.value = value;
-            text.textContent = value;
-            
-            picker.addEventListener('input', (e) => {
-                text.textContent = e.target.value;
-                appState.colors[id] = e.target.value;
-                if (callback) callback(e.target.value);
-            });
-        }
-        
-        // 기본 옵션 초기화
-        function initDefaultOptions() {
-            for (const [targetId, values] of Object.entries(appState.defaultOptions)) {
-                const hiddenInput = document.getElementById(targetId);
-                if (!hiddenInput) continue;
-                
-                // 저장된 값이 있으면 그것을 사용, 없으면 기본값의 처음 몇 개 사용
-                const selectedValues = values.slice(0, 2);
-                
-                // 버튼 활성화
-                selectedValues.forEach(value => {
-                    const button = document.querySelector(`button.option-btn[data-target="${targetId}"][data-value="${value}"]`);
-                    if (button) {
-                        button.classList.add('active');
-                    }
-                });
-                
-                // 히든 인풋 업데이트
-                hiddenInput.value = selectedValues.join(' ');
-            }
-        }
-        
-        // 옵션 토글 함수
-        function toggleOption(button) {
-            button.classList.toggle('active');
-            
-            const targetId = button.getAttribute('data-target');
-            const targetInput = document.getElementById(targetId);
-            
-            // 모든 활성화된 버튼의 값을 수집
-            const selectedButtons = document.querySelectorAll(`button.option-btn.active[data-target="${targetId}"]`);
-            const selectedValues = Array.from(selectedButtons).map(btn => btn.getAttribute('data-value'));
-            
-            // 히든 인풋에 값 설정
-            targetInput.value = selectedValues.join(' ');
-            
-            // 미리보기 업데이트
-            updateProfile();
-        }
-        
-        // 태그 렌더링 함수
-        function renderTags() {
-            const tagColor = appState.colors.tagColor;
-            const tagTextColor = appState.colors.tagTextColor;
-            
-            // 태그 관리 섹션 업데이트
-            const tagList = document.getElementById('tagList');
-            tagList.innerHTML = '';
-            
-            appState.tags.forEach((tag, index) => {
-                const tagElement = document.createElement('div');
-                tagElement.className = 'flex items-center bg-gray-200 px-2 py-1 rounded';
-                tagElement.innerHTML = `
-                    <span class="text-xs mr-1">#${tag}</span>
-                    <button onclick="removeTag(${index})" class="text-red-500 text-xs">×</button>
-                `;
-                tagList.appendChild(tagElement);
-            });
-            
-            // 프로필 태그 섹션 업데이트
-            const profileTags = document.getElementById('profileTags');
-            profileTags.innerHTML = '';
-            
-            appState.tags.forEach(tag => {
-                const tagElement = document.createElement('span');
-                tagElement.className = 'px-2 py-1 rounded text-xs';
-                tagElement.style.backgroundColor = tagColor;
-                tagElement.style.color = tagTextColor;
-                tagElement.textContent = `#${tag}`;
-                profileTags.appendChild(tagElement);
-            });
-        }
-        
-        // 태그 추가
-        function addTag() {
-            const newTagInput = document.getElementById('newTag');
-            const newTag = newTagInput.value.trim();
-            
-            if (newTag !== '') {
-                appState.tags.push(newTag);
-                newTagInput.value = '';
-                renderTags();
-            }
-        }
-        
-        // 태그 삭제
-        function removeTag(index) {
-            appState.tags = appState.tags.filter((_, i) => i !== index);
-            renderTags();
-        }
-        
-        // 미리보기 업데이트 함수
-        function updatePreview() {
-            // 색상 업데이트
-            updateColorPicker('headerColor', document.getElementById('headerColor').value, (color) => {
-                document.getElementById('cardHeader').style.backgroundColor = color;
-            });
-            
-            updateColorPicker('tagColor', document.getElementById('tagColor').value, null);
-            updateColorPicker('tagTextColor', document.getElementById('tagTextColor').value, null);
-            
-            // 헤더 제목 업데이트
-            updateHeaderTitle(document.getElementById('headerTitle').value);
-            
-            // 이미지 업데이트
-            updateProfileImage();
-            updateBackgroundImage();
-            
-            // 프로필 정보 업데이트
-            updateProfile();
-            
-            // 태그 업데이트
-            renderTags();
-            
-            // 상태 메시지 표시
-            showStatusMessage('미리보기가 업데이트되었습니다!', 'blue');
-        }
+// appState에 headerTextColor 추가
+const appState = {
+    tags: ['남성', '여성', '기타', '인외', '수인', 'HL', 'BL', 'GL', 'NCP', '시뮬레이션', 'R18', '고어'],
+    defaultOptions: {
+        'accountStatus': ['블락', '블언블', '언팔'],
+        'speechType': ['무시가능', '직멘제외무시가능', '무시불가능'],
+        'tweetStyle': ['일상', 'RT', '타장르언급', '욕설', '우울', 'R18', '폭력성', '고어', '탐라대화', '마음요정', '인용대화'],
+        'playStyle': ['제작자', '소비자'],
+        'cpPreference': ['HL', 'BL', 'GL', 'ALL', 'NCP', '리버시블', '논리버시블']
+    },
+    colors: {
+        headerColor: '#d8b4fe',
+        headerTextColor: '#FFFFFF', // 기본값은 흰색
+        tagColor: '#f3e8ff',
+        tagTextColor: '#6b21a8'
+    },
+    headerTitle: 'AI Chat 자기소개표'
+};
+
+// 헤더 텍스트 색상 업데이트 함수 추가
+function updateHeaderTextColor(color) {
+    appState.colors.headerTextColor = color;
+    document.getElementById('cardHeader').style.color = color;
+}
+
+// 색상 선택기 초기화 함수 업데이트
+function initColorPickers() {
+    // 헤더 배경 색상 설정
+    updateColorPicker('headerColor', appState.colors.headerColor, (color) => {
+        document.getElementById('cardHeader').style.backgroundColor = color;
+    });
+    
+    // 헤더 텍스트 색상 설정
+    updateColorPicker('headerTextColor', appState.colors.headerTextColor, (color) => {
+        document.getElementById('cardHeader').style.color = color;
+    });
+    
+    // 태그 배경 색상 설정
+    updateColorPicker('tagColor', appState.colors.tagColor, renderTags);
+    
+    // 태그 텍스트 색상 설정
+    updateColorPicker('tagTextColor', appState.colors.tagTextColor, renderTags);
+}
+
+// 미리보기 업데이트 함수 업데이트
+function updatePreview() {
+    // 색상 업데이트
+    updateColorPicker('headerColor', document.getElementById('headerColor').value, (color) => {
+        document.getElementById('cardHeader').style.backgroundColor = color;
+    });
+    
+    updateColorPicker('headerTextColor', document.getElementById('headerTextColor').value, (color) => {
+        document.getElementById('cardHeader').style.color = color;
+    });
+    
+    updateColorPicker('tagColor', document.getElementById('tagColor').value, null);
+    updateColorPicker('tagTextColor', document.getElementById('tagTextColor').value, null);
+    
+    // 헤더 제목 업데이트
+    updateHeaderTitle(document.getElementById('headerTitle').value);
+    
+    // 이미지 업데이트
+    updateProfileImage();
+    updateBackgroundImage();
+    
+    // 프로필 정보 업데이트
+    updateProfile();
+    
+    // 태그 업데이트
+    renderTags();
+    
+    // 상태 메시지 표시
+    showStatusMessage('미리보기가 업데이트되었습니다!', 'blue');
+}
         
         // 프로필 이미지 업데이트
         function updateProfileImage() {
