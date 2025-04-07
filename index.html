@@ -238,9 +238,9 @@
         <div class="w-full md:w-1/3 p-4 bg-white border-r border-gray-200 overflow-y-auto">
             <h1 class="text-xl font-bold mb-6">가로형 자기소개표 생성기</h1>
             
-            <!-- 테마 색상 설정 - 기본적으로 접혀있음 -->
+<!-- 테마 색상 설정 - 기본적으로 접혀있음 -->
             <div class="mb-6">
-                <button 
+                <button
                     class="setting-header"
                     onclick="toggleSection('themeSection')"
                 >
@@ -249,113 +249,114 @@
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
-                
+
                 <div id="themeSection" class="hidden">
                     <!-- 헤더 제목 설정 -->
                     <div class="setting-item">
                         <label class="setting-label">헤더 제목</label>
                         <div class="flex">
-                            <input 
-                                type="text" 
-                                id="headerTitle" 
-                                value="AI Chat 자기소개표" 
-                                placeholder="헤더 제목을 입력하세요" 
+                            <input
+                                type="text"
+                                id="headerTitle"
+                                value="AI Chat 자기소개표"
+                                placeholder="헤더 제목을 입력하세요"
                                 class="flex-grow p-2 border border-gray-300 rounded-l"
                                 oninput="updateHeaderTitle(this.value)"
                             >
                             <div class="flex flex-col items-center">
-                                <input 
-                                    type="color" 
-                                    id="headerTextColor" 
-                                    value="#8C6717" 
+                                <input
+                                    type="color"
+                                    id="headerTextColor"
+                                    value="#8C6717"
                                     class="h-full px-2 py-1 border border-gray-300 rounded-r"
                                     oninput="updateHeaderTextColor(this.value)"
                                 >
                             </div>
                         </div>
                     </div>
-                    
+
+                    <!-- 색상 선택 설정 -->
                     <div class="grid grid-cols-3 gap-0 mb-4">
                         <div class="flex flex-col items-center">
                             <label class="setting-label text-center">헤더 색상</label>
                             <input type="color" id="headerColor" value="#F7F4CB" class="h-10 w-16">
                         </div>
-                        
+
                         <div class="flex flex-col items-center">
                             <label class="setting-label text-center">태그 배경 색상</label>
                             <input type="color" id="tagColor" value="#EFDAB1" class="h-10 w-16">
                         </div>
-                        
+
                         <div class="flex flex-col items-center">
                             <label class="setting-label text-center">태그 텍스트 색상</label>
                             <input type="color" id="tagTextColor" value="#8C6717" class="h-10 w-16">
                         </div>
                     </div>
-                </div>
+
+                    {/* <<< 텍스트 크기 설정 부분이 여기로 이동했습니다! >>> */}
+                    <div class="setting-item mt-4">
+                        <label class="setting-label">전체 텍스트 크기 조절</label>
+                        <div class="flex items-center gap-2 mb-2">
+                            <input
+                                type="range"
+                                id="textSizeSlider"
+                                min="70"
+                                max="130"
+                                value="100"
+                                class="flex-grow"
+                                oninput="updateTextSize(this.value); document.getElementById('textSizeInput').value = this.value + '%';"
+                            >
+                            <input
+                                type="text"
+                                id="textSizeInput"
+                                value="100%"
+                                class="w-16 p-1 border border-gray-300 rounded text-center"
+                                onchange="updateTextSizeFromInput(this.value)"
+                            >
+                        </div>
+
+                        <label class="setting-label">헤더 제목 크기 조절</label>
+                        <div class="flex items-center gap-2 mb-2">
+                            <input
+                                type="range"
+                                id="headerSizeSlider"
+                                min="70"
+                                max="150"
+                                value="100"
+                                class="flex-grow"
+                                oninput="updateHeaderSize(this.value); document.getElementById('headerSizeInput').value = this.value + '%';"
+                            >
+                            <input
+                                type="text"
+                                id="headerSizeInput"
+                                value="100%"
+                                class="w-16 p-1 border border-gray-300 rounded text-center"
+                                onchange="updateHeaderSizeFromInput(this.value)"
+                            >
+                        </div>
+
+                        <label class="setting-label">닉네임/아이디 크기 조절</label>
+                        <div class="flex items-center gap-2">
+                            <input
+                                type="range"
+                                id="nicknameSizeSlider"
+                                min="70"
+                                max="150"
+                                value="100"
+                                class="flex-grow"
+                                oninput="updateNicknameSize(this.value); document.getElementById('nicknameSizeInput').value = this.value + '%';"
+                            >
+                            <input
+                                type="text"
+                                id="nicknameSizeInput"
+                                value="100%"
+                                class="w-16 p-1 border border-gray-300 rounded text-center"
+                                onchange="updateNicknameSizeFromInput(this.value)"
+                            >
+                        </div>
+                    </div>
+                </div> 
             </div>
-            
-<!-- 텍스트 크기 설정 - 세분화 -->
-<div class="setting-item mt-4">
-    <label class="setting-label">전체 텍스트 크기 조절</label>
-    <div class="flex items-center gap-2 mb-2">
-        <input 
-            type="range" 
-            id="textSizeSlider" 
-            min="70" 
-            max="130" 
-            value="100" 
-            class="flex-grow"
-            oninput="updateTextSize(this.value); document.getElementById('textSizeInput').value = this.value + '%';"
-        >
-        <input 
-            type="text" 
-            id="textSizeInput" 
-            value="100%" 
-            class="w-16 p-1 border border-gray-300 rounded text-center"
-            onchange="updateTextSizeFromInput(this.value)"
-        >
-    </div>
-
-    <label class="setting-label">헤더 제목 크기 조절</label>
-    <div class="flex items-center gap-2 mb-2">
-        <input 
-            type="range" 
-            id="headerSizeSlider" 
-            min="70" 
-            max="150" 
-            value="100" 
-            class="flex-grow"
-            oninput="updateHeaderSize(this.value); document.getElementById('headerSizeInput').value = this.value + '%';"
-        >
-        <input 
-            type="text" 
-            id="headerSizeInput" 
-            value="100%" 
-            class="w-16 p-1 border border-gray-300 rounded text-center"
-            onchange="updateHeaderSizeFromInput(this.value)"
-        >
-    </div>
-
-    <label class="setting-label">닉네임/아이디 크기 조절</label>
-    <div class="flex items-center gap-2">
-        <input 
-            type="range" 
-            id="nicknameSizeSlider" 
-            min="70" 
-            max="150" 
-            value="100" 
-            class="flex-grow"
-            oninput="updateNicknameSize(this.value); document.getElementById('nicknameSizeInput').value = this.value + '%';"
-        >
-        <input 
-            type="text" 
-            id="nicknameSizeInput" 
-            value="100%" 
-            class="w-16 p-1 border border-gray-300 rounded text-center"
-            onchange="updateNicknameSizeFromInput(this.value)"
-        >
-    </div>
-</div>
 
             <!-- 이미지 설정 섹션 -->
             <div class="mb-6">
