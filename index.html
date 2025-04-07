@@ -126,28 +126,6 @@
         .custom-button:hover {
             background-color: #d5a649;
         }
-        
-        /* 새로 추가된 레이아웃 스타일 */
-        .info-container {
-            display: flex;
-            flex-direction: row;
-            gap: 12px;
-            margin: 0 4px;
-        }
-        
-        .detail-box {
-            flex: 3;
-        }
-        
-        .tags-box {
-            flex: 2;
-        }
-        
-        @media (max-width: 640px) {
-            .info-container {
-                flex-direction: column;
-            }
-        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -518,22 +496,49 @@
                         </div>
                     </div>
                     
-                    <!-- 가로 배치된 상세 정보와 태그 섹션 -->
-                    <div class="info-container my-2">
-                        <!-- 상세 정보 섹션 -->
-                        <div class="detail-box border border-gray-200 p-4 rounded bg-white">
-                            <div class="info-grid mb-2">
-                                <div class="text-gray-600 font-medium info-label">CP 성향:</div>
-                                <div class="text-gray-800" id="profileCpPreference">HL,BL,GL,ALL,NCP,리버시블,논리버시블</div>
-                            </div>
+                    <!-- 상세 정보 섹션 - 간격 조정 -->
+                    <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
+                        <div class="info-grid mb-2">
+                            <div class="text-gray-600 font-medium info-label">관계 정리:</div>
+                            <div class="text-gray-800" id="profileAccountStatus">블락,블언블,언팔</div>
                         </div>
                         
-                        <!-- 태그 섹션 -->
-                        <div class="tags-box border border-gray-200 p-4 rounded bg-white">
-                            <div class="text-gray-600 font-medium mb-2">선호 태그:</div>
-                            <div class="flex flex-wrap gap-2" id="profileTags">
-                                <!-- 태그 목록이 여기에 추가됩니다 -->
-                            </div>
+                        <div class="info-grid mb-2">
+                            <div class="text-gray-600 font-medium info-label">지뢰:</div>
+                            <div class="text-gray-800" id="profileSinic"></div>
+                        </div>
+                        
+                        <div class="info-grid mb-2">
+                            <div class="text-gray-600 font-medium info-label">지뢰 대응:</div>
+                            <div class="text-gray-800" id="profileSpeechType">무시가능,직멘제외무시가능,무시불가능</div>
+                        </div>
+                        
+                        <div class="info-grid mb-2">
+                            <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
+                            <div class="text-gray-800" id="profileTweetStyle">일상,RT,타장르언급,욕설,우울,R18,폭력성,고어,탐라대화,마음요정,인용대화</div>
+                        </div>
+                        
+                        <div class="info-grid mb-2">
+                            <div class="text-gray-600 font-medium info-label">성향:</div>
+                            <div class="text-gray-800" id="profilePlayStyle">제작자,소비자</div>
+                        </div>
+                        
+                        <div class="info-grid mb-2">
+                            <div class="text-gray-600 font-medium info-label">플랫폼:</div>
+                            <div class="text-gray-800" id="profilePlatform"></div>
+                        </div>
+                        
+                        <div class="info-grid mb-2">
+                            <div class="text-gray-600 font-medium info-label">CP 성향:</div>
+                            <div class="text-gray-800" id="profileCpPreference">HL,BL,GL,ALL,NCP,리버시블,논리버시블</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 태그 섹션 -->
+                    <div class="p-4 border border-gray-200 mx-4 my-2 mb-4 rounded bg-white">
+                        <div class="text-gray-600 font-medium mb-2">선호 태그:</div>
+                        <div class="flex flex-wrap gap-2" id="profileTags">
+                            <!-- 태그 목록이 여기에 추가됩니다 -->
                         </div>
                     </div>
                 </div>
@@ -542,24 +547,6 @@
     </div>
 
     <script>
-        // 반응형 레이아웃 처리 (모바일에서 상세정보와 태그 섹션 세로 배치)
-        function handleResponsiveLayout() {
-            const infoContainer = document.querySelector('.info-container');
-            if (window.innerWidth <= 640) {
-                infoContainer.classList.remove('flex-row');
-                infoContainer.classList.add('flex-col');
-            } else {
-                infoContainer.classList.remove('flex-col');
-                infoContainer.classList.add('flex-row');
-            }
-        }
-        
-        // 윈도우 리사이즈 이벤트에 반응
-        window.addEventListener('resize', handleResponsiveLayout);
-        
-        // 페이지 로드 시 초기 레이아웃 설정
-        document.addEventListener('DOMContentLoaded', handleResponsiveLayout);
-        
         // 상태 관리 객체
         const appState = {
             tags: ['남성', '여성', '기타', '인외', '수인', 'HL', 'BL', 'GL', 'NCP', '시뮬레이션', 'R18', '고어', '탑',  '바텀',  '깁',  '텍',  '올라운더',  '중년',  '너드',  '쓰레기',  '히키코모리',  '아이돌',  '스포츠',  '일상',  '빙의',  '로맨스',  '로판',  '판타지',  '느와르',  'SF',  '아포칼립스',  '동양풍',  '중세',  '현대',  '고등학교',  '대학교',  '마법',  '초능력',  '히어로',  '빌런',  '오메가버스',  '가이드버스',  '네임버스',  '하렘',  '역하렘',  '순애',  '짝사랑',  '구원',  '복수',  '강압',  '집착',  '피폐',  '범죄',  'BDSM',  'NTR',  '역NTR',  '애증',  '혐관',  '동거',  '감금',  '키잡',  '역키잡',  '근친',  '짭근친'],
