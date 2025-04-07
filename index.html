@@ -759,23 +759,23 @@
     </div>
 
     <script>
-        // 상태 관리 객체
-        const appState = {
-            tags: ['남성', '여성', '기타', '인외', '수인', 'HL', 'BL', 'GL', 'NCP', '시뮬레이션', 'R18', '고어', '탑', '바텀', '깁', '텍', '올라운더', '중년', '너드', '쓰레기', '히키코모리', '아이돌', '스포츠', '일상', '빙의', '로맨스', '로판', '판타지', '느와르', 'SF', '아포칼립스', '동양풍', '중세', '현대', '고등학교', '대학교', '마법', '초능력', '히어로', '빌런', '오메가버스', '가이드버스', '네임버스', '하렘', '역하렘', '순애', '짝사랑', '구원', '복수', '강압', '집착', '피폐', '범죄', 'BDSM', 'NTR', '역NTR', '애증', '혐관', '동거', '감금', '키잡', '역키잡', '근친', '짭근친'],
-            colors: {
-                headerColor: '#F7F4CB',       // 헤더 색상 변경
-                headerTextColor: '#8C6717',   // 헤더 텍스트 색상 변경
-                tagColor: '#EFDAB1',          // 태그 배경 색상 변경
-                tagTextColor: '#8C6717'       // 태그 텍스트 색상 변경
-            },
-            headerTitle: 'AI Chat 자기소개표'
-        };
+// 상태 관리 객체
+const appState = {
+    tags: ['남성', '여성', '기타', '인외', '수인', 'HL', 'BL', 'GL', 'NCP', '시뮬레이션', 'R18', '고어', '탑', '바텀', '깁', '텍', '올라운더', '중년', '너드', '쓰레기', '히키코모리', '아이돌', '스포츠', '일상', '빙의', '로맨스', '로판', '판타지', '느와르', 'SF', '아포칼립스', '동양풍', '중세', '현대', '고등학교', '대학교', '마법', '초능력', '히어로', '빌런', '오메가버스', '가이드버스', '네임버스', '하렘', '역하렘', '순애', '짝사랑', '구원', '복수', '강압', '집착', '피폐', '범죄', 'BDSM', 'NTR', '역NTR', '애증', '혐관', '동거', '감금', '키잡', '역키잡', '근친', '짭근친'],
+    colors: {
+        headerColor: '#F7F4CB',       // 헤더 색상 변경
+        headerTextColor: '#8C6717',   // 헤더 텍스트 색상 변경
+        tagColor: '#EFDAB1',          // 태그 배경 색상 변경
+        tagTextColor: '#8C6717'       // 태그 텍스트 색상 변경
+    },
+    headerTitle: 'AI Chat 자기소개표'
+};
 
-        // 페이지 로드 시 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            initColorPickers();
-            renderTags();
-            
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    initColorPickers();
+    renderTags();
+    
     // 프로필 및 배경 이미지 URL 설정 후 자동 로드
     document.getElementById('profileImageUrl').value = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkGHVkHhOalIBxWeuKVuV-8T4hGPXVBIgTNw&s";
     document.getElementById('backgroundImageUrl').value = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkGHVkHhOalIBxWeuKVuV-8T4hGPXVBIgTNw&s";
@@ -784,475 +784,471 @@
     updateProfileImage();
     updateBackgroundImage();
     
-            // 엔터키 이벤트
-            document.getElementById('newTag').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') addTag();
-            });
+    // 엔터키 이벤트
+    document.getElementById('newTag').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') addTag();
+    });
+    
+    // 색상 선택기 이벤트
+    document.getElementById('headerColor').addEventListener('input', function() {
+        const headerColor = this.value;
+        appState.colors.headerColor = headerColor;
+        
+        // 헤더 배경색 적용
+        document.getElementById('cardHeader').style.backgroundColor = headerColor;
+        
+        // 토글 버튼 활성화 배경색 업데이트
+        updateToggleButtonStyles();
+        
+        // 태그 목록 배경색 업데이트 (설정 패널에만)
+        updateSettingTagStyles();
+    });
+    
+    document.getElementById('headerTextColor').addEventListener('input', function() {
+        appState.colors.headerTextColor = this.value;
+        document.getElementById('cardHeader').style.color = this.value;
+    });
+    
+    document.getElementById('tagColor').addEventListener('input', function() {
+        appState.colors.tagColor = this.value;
+        renderTags();
+    });
+    
+    document.getElementById('tagTextColor').addEventListener('input', function() {
+        const tagTextColor = this.value;
+        appState.colors.tagTextColor = tagTextColor;
+        
+        // 토글 버튼 텍스트 색상 업데이트
+        updateToggleButtonStyles();
+        
+        // 태그 렌더링 갱신 (미리보기 태그 스타일 변경)
+        renderTags();
+    });
+    
+    // 배경 투명도
+    document.getElementById('backgroundOpacity').addEventListener('input', function() {
+        const backgroundImage = document.getElementById('backgroundImage');
+        if (backgroundImage) {
+            backgroundImage.style.opacity = this.value / 100;
+        }
+    });
+    
+    // 초기 스타일 적용
+    updateToggleButtonStyles();
+    
+    // 미리보기 초기 업데이트 (기본값 표시)
+    updatePreview();
+});
+
+// 단일 선택 옵션 토글 (연령, 지뢰 대응처럼 하나만 선택 가능한 경우)
+function toggleSingleOption(button, groupId) {
+    const target = button.dataset.target;
+    const value = button.dataset.value;
+    const hiddenInput = document.getElementById(target);
+    const group = document.getElementById(groupId);
+    
+    // 그룹 내 모든 버튼 비활성화
+    group.querySelectorAll('.option-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.backgroundColor = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+    });
+    
+    // 선택한 버튼만 활성화
+    button.classList.add('active');
+    button.style.backgroundColor = appState.colors.headerColor;
+    button.style.color = appState.colors.tagTextColor;
+    button.style.borderColor = appState.colors.headerColor;
+    
+    // 값 업데이트
+    hiddenInput.value = value;
+    
+    // 미리보기 업데이트
+    document.getElementById(`profile${target.charAt(0).toUpperCase() + target.slice(1)}`).textContent = value;
+}
+
+// 토글 버튼 스타일 업데이트 함수
+function updateToggleButtonStyles() {
+    const headerColor = appState.colors.headerColor;
+    const tagTextColor = appState.colors.tagTextColor;
+    
+    // 모든 활성화된 토글 버튼의 스타일 변경
+    document.querySelectorAll('.option-btn.active').forEach(button => {
+        button.style.backgroundColor = headerColor;
+        button.style.color = tagTextColor;
+        button.style.borderColor = headerColor;
+    });
+    
+    // 스타일 규칙 업데이트(동적 CSS 추가)
+    updateCSSRule('.option-btn.active', `
+        background-color: ${headerColor} !important;
+        color: ${tagTextColor} !important;
+        border-color: ${headerColor} !important;
+    `);
+}
+
+// 설정 패널의 태그 스타일 업데이트
+function updateSettingTagStyles() {
+    const headerColor = appState.colors.headerColor;
+    const tagTextColor = appState.colors.tagTextColor;
+    
+    // 설정 패널의 태그 배경색 변경
+    document.querySelectorAll('#tagList .flex.items-center').forEach(tag => {
+        tag.style.backgroundColor = headerColor;
+        tag.style.color = tagTextColor;
+    });
+}
+
+// 동적 CSS 규칙 추가/업데이트 함수
+function updateCSSRule(selector, cssText) {
+    // 기존 스타일 요소 찾기 또는 새로 생성
+    let styleEl = document.getElementById('dynamic-styles');
+    if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = 'dynamic-styles';
+        document.head.appendChild(styleEl);
+    }
+    
+    // 기존 규칙 찾기
+    const sheet = styleEl.sheet;
+    for (let i = 0; sheet.cssRules && i < sheet.cssRules.length; i++) {
+        if (sheet.cssRules[i].selectorText === selector) {
+            sheet.deleteRule(i);
+            break;
+        }
+    }
+    
+    // 새 규칙 추가
+    try {
+        sheet.insertRule(`${selector} { ${cssText} }`, sheet.cssRules ? sheet.cssRules.length : 0);
+    } catch (e) {
+        console.error('CSS 규칙 추가 실패:', e);
+    }
+}
+
+// 옵션 토글 함수 (여러 선택 가능)
+function toggleOption(button) {
+    const target = button.dataset.target;
+    const value = button.dataset.value;
+    const hiddenInput = document.getElementById(target);
+    
+    // 현재 선택된 값들을 배열로 변환
+    let values = hiddenInput.value ? hiddenInput.value.split(',').map(v => v.trim()) : [];
+    
+    // 값이 이미 있으면 제거, 없으면 추가
+    if (button.classList.contains('active')) {
+        // 값 제거
+        values = values.filter(v => v !== value);
+        button.classList.remove('active');
+        // 스타일 제거
+        button.style.backgroundColor = '';
+        button.style.color = '';
+        button.style.borderColor = '';
+    } else {
+        // 값 추가
+        values.push(value);
+        button.classList.add('active');
+        // 활성화 스타일 즉시 적용
+        button.style.backgroundColor = appState.colors.headerColor;
+        button.style.color = appState.colors.tagTextColor;
+        button.style.borderColor = appState.colors.headerColor;
+    }
+    
+    // 업데이트된 값 저장 - 쉼표와 공백으로 구분
+    hiddenInput.value = values.length > 0 ? values.join(', ') : '';
+    
+    // 팔로우 안내 특별 처리
+    if (target === 'followType') {
+        updateFollowGuide(values);
+    }
+}
+
+// 팔로우 안내 텍스트 업데이트
+function updateFollowGuide(values) {
+    let followText = '';
+    if (values && values.length > 0) {
+        followText = values.join(', ') + ' 하면 팔로우합니다.';
+    } else {
+        followText = '하면 팔로우합니다.';
+    }
+    document.getElementById('profileFollowGuide').textContent = followText;
+}
+
+// 섹션 토글
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const toggleIcon = document.getElementById(sectionId.replace('Section', 'ToggleIcon'));
+    
+    if (section.classList.contains('hidden')) {
+        section.classList.remove('hidden');
+        toggleIcon.classList.add('rotate-180');
+    } else {
+        section.classList.add('hidden');
+        toggleIcon.classList.remove('rotate-180');
+    }
+}
+
+// 색상 선택기 초기화
+function initColorPickers() {
+    document.getElementById('headerColor').value = appState.colors.headerColor;
+    document.getElementById('headerTextColor').value = appState.colors.headerTextColor;
+    document.getElementById('tagColor').value = appState.colors.tagColor;
+    document.getElementById('tagTextColor').value = appState.colors.tagTextColor;
+    
+    document.getElementById('cardHeader').style.backgroundColor = appState.colors.headerColor;
+    document.getElementById('cardHeader').style.color = appState.colors.headerTextColor;
+}
+
+// 헤더 제목 업데이트
+function updateHeaderTitle(title) {
+    appState.headerTitle = title;
+    document.getElementById('cardHeader').textContent = title;
+}
+
+// 헤더 텍스트 색상 업데이트
+function updateHeaderTextColor(color) {
+    appState.colors.headerTextColor = color;
+    document.getElementById('cardHeader').style.color = color;
+}
+
+// 태그 추가
+function addTag() {
+    const newTagInput = document.getElementById('newTag');
+    const tagValue = newTagInput.value.trim();
+    
+    if (tagValue === '') {
+        showStatusMessage('태그를 입력해주세요.', 'red');
+        return;
+    }
+    
+    if (appState.tags.includes(tagValue)) {
+        showStatusMessage('이미 존재하는 태그입니다.', 'red');
+        return;
+    }
+    
+    appState.tags.push(tagValue);
+    newTagInput.value = '';
+    renderTags();
+    showStatusMessage('태그가 추가되었습니다.', 'green');
+}
+
+// 태그 삭제
+function removeTag(tagValue) {
+    appState.tags = appState.tags.filter(tag => tag !== tagValue);
+    renderTags();
+    showStatusMessage('태그가 삭제되었습니다.', 'blue');
+}
+
+// 태그 렌더링
+function renderTags() {
+    const tagList = document.getElementById('tagList');
+    const profileTags = document.getElementById('profileTags');
+    
+    tagList.innerHTML = '';
+    profileTags.innerHTML = '';
+    
+    const tagBgColor = appState.colors.tagColor;
+    const tagTextColor = appState.colors.tagTextColor;
+    const headerColor = appState.colors.headerColor; // 헤더 색상 가져오기
+    
+    appState.tags.forEach(tag => {
+        // 설정 패널의 태그 목록 - 헤더 색상 적용
+        const tagElement = document.createElement('div');
+        tagElement.className = 'flex items-center px-3 py-1 rounded';
+        tagElement.style.backgroundColor = headerColor; // 헤더 색상을 배경색으로 사용
+        tagElement.style.color = tagTextColor; // 태그 텍스트 색상 적용
+        tagElement.innerHTML = `
+            <span class="mr-2">${tag}</span>
+            <button 
+                class="text-red-500 hover:text-red-700" 
+                onclick="removeTag('${tag}')"
+            >×</button>
+        `;
+        tagList.appendChild(tagElement);
+        
+        // 미리보기 태그 - 태그 배경 색상 사용
+        const previewTagElement = document.createElement('span');
+        previewTagElement.className = 'tag-item';
+        previewTagElement.textContent = tag;
+        previewTagElement.style.backgroundColor = tagBgColor;
+        previewTagElement.style.color = tagTextColor;
+        
+        profileTags.appendChild(previewTagElement);
+    });
+    
+    // 설정 패널의 태그 목록 스타일 갱신
+    updateSettingTagStyles();
+}
+
+// 프로필 이미지 업데이트
+function updateProfileImage() {
+    const imageUrl = document.getElementById('profileImageUrl').value.trim();
+    const profileImage = document.getElementById('profileImage');
+    const profileImagePlaceholder = document.getElementById('profileImagePlaceholder');
+    
+    if (imageUrl !== '') {
+        profileImage.src = imageUrl;
+        profileImage.classList.remove('hidden');
+        profileImagePlaceholder.classList.add('hidden');
+        
+        profileImage.onerror = function() {
+            profileImage.classList.add('hidden');
+            profileImagePlaceholder.classList.remove('hidden');
+            showStatusMessage('이미지를 불러올 수 없습니다.', 'red');
+        };
+    } else {
+        profileImage.classList.add('hidden');
+        profileImagePlaceholder.classList.remove('hidden');
+    }
+}
+
+// 배경 이미지 업데이트
+function updateBackgroundImage() {
+    const imageUrl = document.getElementById('backgroundImageUrl').value.trim();
+    const opacity = document.getElementById('backgroundOpacity').value;
+    const backgroundImageContainer = document.getElementById('backgroundImageContainer');
+    const backgroundImage = document.getElementById('backgroundImage');
+    const profileSection = document.getElementById('profileSection');
+    
+    if (imageUrl !== '') {
+        backgroundImage.src = imageUrl;
+        backgroundImageContainer.classList.remove('hidden');
+        backgroundImage.style.opacity = opacity / 100;
+        profileSection.classList.add('has-bg-image');
+        
+        backgroundImage.onerror = function() {
+            backgroundImageContainer.classList.add('hidden');
+            profileSection.classList.remove('has-bg-image');
+            showStatusMessage('배경 이미지를 불러올 수 없습니다.', 'red');
+        };
+    } else {
+        backgroundImageContainer.classList.add('hidden');
+        profileSection.classList.remove('has-bg-image');
+    }
+}
+
+// 미리보기 업데이트
+function updatePreview() {
+    // 헤더 제목 업데이트
+    updateHeaderTitle(document.getElementById('headerTitle').value);
+    
+    // 이미지 업데이트
+    updateProfileImage();
+    updateBackgroundImage();
+    
+    // 프로필 정보 업데이트
+    const fields = [
+        { inputId: 'nickname', outputId: 'profileName', defaultText: '닉네임 (@아이디)' },
+        { inputId: 'bio', outputId: 'profileBio', defaultText: '자신을 간단히 소개해주세요.' },
+        { inputId: 'age', outputId: 'profileAge', defaultText: '성인' },
+        { inputId: 'accountStatus', outputId: 'profileAccountStatus' },
+        { inputId: 'sinic', outputId: 'profileSinic' },
+        { inputId: 'speechType', outputId: 'profileSpeechType' },
+        { inputId: 'tweetStyle', outputId: 'profileTweetStyle' },
+        { inputId: 'playStyle', outputId: 'profilePlayStyle' },
+        { inputId: 'platform', outputId: 'profilePlatform' },
+        { inputId: 'cpPreference', outputId: 'profileCpPreference' }
+    ];
+    
+    fields.forEach(field => {
+        const value = document.getElementById(field.inputId).value;
+        const outputElement = document.getElementById(field.outputId);
+        if (outputElement) {
+            outputElement.textContent = value || field.defaultText || '';
+        }
+    });
+    
+    // 팔로우 안내 특별 처리
+    const followTypeValue = document.getElementById('followType').value;
+    const followValues = followTypeValue ? followTypeValue.split(',').map(item => item.trim()) : [];
+    updateFollowGuide(followValues);
+    
+    // 태그 업데이트
+    renderTags();
+    
+    // 토글 버튼 스타일 업데이트
+    updateToggleButtonStyles();
+    
+    showStatusMessage('미리보기가 업데이트되었습니다!', 'blue');
+}
+
+// dom-to-image 라이브러리를 사용한 이미지 저장 함수
+function downloadImage() {
+    const profileCard = document.getElementById('profileCard');
+    showStatusMessage("이미지 생성 중...", 'green');
+    
+    // dom-to-image 설정
+    const options = {
+        quality: 1.0,
+        bgcolor: '#fff',
+        style: {
+          'font-smooth': 'always',
+          'text-rendering': 'optimizeLegibility'
+        },
+        filter: (node) => {
+            // 숨겨진 요소 제외
+            return !node.classList || !node.classList.contains('hidden');
+        }
+    };
+    
+    // PNG 이미지 생성
+    domtoimage.toPng(profileCard, options)
+        .then(function(dataUrl) {
+            // 다운로드 링크 생성
+            const link = document.createElement('a');
+            link.download = '자기소개표.png';
+            link.href = dataUrl;
+            link.click();
             
-            // 색상 선택기 이벤트
-            document.getElementById('headerColor').addEventListener('input', function() {
-                const headerColor = this.value;
-                appState.colors.headerColor = headerColor;
+            showStatusMessage("이미지로 저장되었습니다!", 'green');
+        })
+        .catch(function(error) {
+            console.error('이미지 생성 중 오류:', error);
+            
+            // 오류 발생 시 대체 방법 시도
+            showStatusMessage("첫 번째 방법 실패, 대체 방법 시도 중...", 'blue');
+            
+            // 대체 방법: JPEG 형식으로 시도
+            domtoimage.toJpeg(profileCard, { 
+                quality: 0.95,
+                bgcolor: '#ffffff'
+            })
+            .then(function(dataUrl) {
+                const link = document.createElement('a');
+                link.download = '자기소개표.jpg';
+                link.href = dataUrl;
+                link.click();
                 
-                // 헤더 배경색 적용
-                document.getElementById('cardHeader').style.backgroundColor = headerColor;
-                
-                // 토글 버튼 활성화 배경색 업데이트
-                updateToggleButtonStyles();
-                
-                // 태그 목록 배경색 업데이트 (설정 패널에만)
-                updateSettingTagStyles();
+                showStatusMessage("JPEG 형식으로 저장되었습니다!", 'green');
+            })
+            .catch(function(finalError) {
+                console.error('최종 이미지 생성 실패:', finalError);
+                showStatusMessage("이미지 생성에 실패했습니다.", 'red');
             });
-            
-            document.getElementById('headerTextColor').addEventListener('input', function() {
-                appState.colors.headerTextColor = this.value;
-                document.getElementById('cardHeader').style.color = this.value;
-            });
-            
-            document.getElementById('tagColor').addEventListener('input', function() {
-                appState.colors.tagColor = this.value;
-                renderTags();
-            });
-            
-            document.getElementById('tagTextColor').addEventListener('input', function() {
-                const tagTextColor = this.value;
-                appState.colors.tagTextColor = tagTextColor;
-                
-                // 토글 버튼 텍스트 색상 업데이트
-                updateToggleButtonStyles();
-                
-                // 태그 렌더링 갱신 (미리보기 태그 스타일 변경)
-                renderTags();
-            });
-            
-            // 배경 투명도
-            document.getElementById('backgroundOpacity').addEventListener('input', function() {
-                const backgroundImage = document.getElementById('backgroundImage');
-                if (backgroundImage) {
-                    backgroundImage.style.opacity = this.value / 100;
-                }
-            });
-            
-            // 초기 스타일 적용
-            updateToggleButtonStyles();
-            
-            // 미리보기 초기 업데이트 (기본값 표시)
-            updatePreview();
         });
+}
 
-        // 단일 선택 옵션 토글 (연령, 지뢰 대응처럼 하나만 선택 가능한 경우)
-        function toggleSingleOption(button, groupId) {
-            const target = button.dataset.target;
-            const value = button.dataset.value;
-            const hiddenInput = document.getElementById(target);
-            const group = document.getElementById(groupId);
-            
-            // 그룹 내 모든 버튼 비활성화
-            group.querySelectorAll('.option-btn').forEach(btn => {
-                btn.classList.remove('active');
-                btn.style.backgroundColor = '';
-                btn.style.color = '';
-                btn.style.borderColor = '';
-            });
-            
-            // 선택한 버튼만 활성화
-            button.classList.add('active');
-            button.style.backgroundColor = appState.colors.headerColor;
-            button.style.color = appState.colors.tagTextColor;
-            button.style.borderColor = appState.colors.headerColor;
-            
-            // 값 업데이트
-            hiddenInput.value = value;
-            
-            // 미리보기 업데이트
-            document.getElementById(`profile${target.charAt(0).toUpperCase() + target.slice(1)}`).textContent = value;
-        }
-
-        // 토글 버튼 스타일 업데이트 함수
-        function updateToggleButtonStyles() {
-            const headerColor = appState.colors.headerColor;
-            const tagTextColor = appState.colors.tagTextColor;
-            
-            // 모든 활성화된 토글 버튼의 스타일 변경
-            document.querySelectorAll('.option-btn.active').forEach(button => {
-                button.style.backgroundColor = headerColor;
-                button.style.color = tagTextColor;
-                button.style.borderColor = headerColor;
-            });
-            
-            // 스타일 규칙 업데이트(동적 CSS 추가)
-            updateCSSRule('.option-btn.active', `
-                background-color: ${headerColor} !important;
-                color: ${tagTextColor} !important;
-                border-color: ${headerColor} !important;
-            `);
-        }
-
-        // 설정 패널의 태그 스타일 업데이트
-        function updateSettingTagStyles() {
-            const headerColor = appState.colors.headerColor;
-            const tagTextColor = appState.colors.tagTextColor;
-            
-            // 설정 패널의 태그 배경색 변경
-            document.querySelectorAll('#tagList .flex.items-center').forEach(tag => {
-                tag.style.backgroundColor = headerColor;
-                tag.style.color = tagTextColor;
-            });
-        }
-
-        // 동적 CSS 규칙 추가/업데이트 함수
-        function updateCSSRule(selector, cssText) {
-            // 기존 스타일 요소 찾기 또는 새로 생성
-            let styleEl = document.getElementById('dynamic-styles');
-            if (!styleEl) {
-                styleEl = document.createElement('style');
-                styleEl.id = 'dynamic-styles';
-                document.head.appendChild(styleEl);
-            }
-            
-            // 기존 규칙 찾기
-            const sheet = styleEl.sheet;
-            for (let i = 0; sheet.cssRules && i < sheet.cssRules.length; i++) {
-                if (sheet.cssRules[i].selectorText === selector) {
-                    sheet.deleteRule(i);
-                    break;
-                }
-            }
-            
-            // 새 규칙 추가
-            try {
-                sheet.insertRule(`${selector} { ${cssText} }`, sheet.cssRules ? sheet.cssRules.length : 0);
-            } catch (e) {
-                console.error('CSS 규칙 추가 실패:', e);
-            }
-        }
-
-        // 옵션 토글 함수 (여러 선택 가능)
-        function toggleOption(button) {
-            const target = button.dataset.target;
-            const value = button.dataset.value;
-            const hiddenInput = document.getElementById(target);
-            
-            // 현재 선택된 값들을 배열로 변환
-            let values = hiddenInput.value ? hiddenInput.value.split(',') : [];
-            
-            // 값이 이미 있으면 제거, 없으면 추가
-            if (button.classList.contains('active')) {
-                // 값 제거
-                values = values.filter(v => v !== value);
-                button.classList.remove('active');
-                // 스타일 제거
-                button.style.backgroundColor = '';
-                button.style.color = '';
-                button.style.borderColor = '';
-            } else {
-                // 값 추가
-                values.push(value);
-                button.classList.add('active');
-                // 활성화 스타일 즉시 적용
-                button.style.backgroundColor = appState.colors.headerColor;
-                button.style.color = appState.colors.tagTextColor;
-                button.style.borderColor = appState.colors.headerColor;
-            }
-            
-            // 업데이트된 값 저장 - 쉼표와 공백으로 구분
-            hiddenInput.value = values.join(', ');
-            
-            // 값이 비어있으면 쉼표 제거
-            if (hiddenInput.value === '') {
-                hiddenInput.value = '';
-            }
-            
-            // 팔로우 안내 특별 처리
-            if (target === 'followType') {
-                updateFollowGuide(values);
-            }
-        }
-
-        // 팔로우 안내 텍스트 업데이트
-        function updateFollowGuide(values) {
-            let followText = '';
-            if (values.length > 0) {
-                followText = values.join(', ') + ' 하면 팔로우합니다.';
-            } else {
-                followText = '하면 팔로우합니다.';
-            }
-            document.getElementById('profileFollowGuide').textContent = followText;
-        }
-
-        // 섹션 토글
-        function toggleSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            const toggleIcon = document.getElementById(sectionId.replace('Section', 'ToggleIcon'));
-            
-            if (section.classList.contains('hidden')) {
-                section.classList.remove('hidden');
-                toggleIcon.classList.add('rotate-180');
-            } else {
-                section.classList.add('hidden');
-                toggleIcon.classList.remove('rotate-180');
-            }
-        }
-
-        // 색상 선택기 초기화
-        function initColorPickers() {
-            document.getElementById('headerColor').value = appState.colors.headerColor;
-            document.getElementById('headerTextColor').value = appState.colors.headerTextColor;
-            document.getElementById('tagColor').value = appState.colors.tagColor;
-            document.getElementById('tagTextColor').value = appState.colors.tagTextColor;
-            
-            document.getElementById('cardHeader').style.backgroundColor = appState.colors.headerColor;
-            document.getElementById('cardHeader').style.color = appState.colors.headerTextColor;
-        }
-
-        // 헤더 제목 업데이트
-        function updateHeaderTitle(title) {
-            appState.headerTitle = title;
-            document.getElementById('cardHeader').textContent = title;
-        }
-
-        // 헤더 텍스트 색상 업데이트
-        function updateHeaderTextColor(color) {
-            appState.colors.headerTextColor = color;
-            document.getElementById('cardHeader').style.color = color;
-        }
-
-        // 태그 추가
-        function addTag() {
-            const newTagInput = document.getElementById('newTag');
-            const tagValue = newTagInput.value.trim();
-            
-            if (tagValue === '') {
-                showStatusMessage('태그를 입력해주세요.', 'red');
-                return;
-            }
-            
-            if (appState.tags.includes(tagValue)) {
-                showStatusMessage('이미 존재하는 태그입니다.', 'red');
-                return;
-            }
-            
-            appState.tags.push(tagValue);
-            newTagInput.value = '';
-            renderTags();
-            showStatusMessage('태그가 추가되었습니다.', 'green');
-        }
-
-        // 태그 삭제
-        function removeTag(tagValue) {
-            appState.tags = appState.tags.filter(tag => tag !== tagValue);
-            renderTags();
-            showStatusMessage('태그가 삭제되었습니다.', 'blue');
-        }
-
-        // 태그 렌더링
-        function renderTags() {
-            const tagList = document.getElementById('tagList');
-            const profileTags = document.getElementById('profileTags');
-            
-            tagList.innerHTML = '';
-            profileTags.innerHTML = '';
-            
-            const tagBgColor = appState.colors.tagColor;
-            const tagTextColor = appState.colors.tagTextColor;
-            const headerColor = appState.colors.headerColor; // 헤더 색상 가져오기
-            
-            appState.tags.forEach(tag => {
-                // 설정 패널의 태그 목록 - 헤더 색상 적용
-                const tagElement = document.createElement('div');
-                tagElement.className = 'flex items-center px-3 py-1 rounded';
-                tagElement.style.backgroundColor = headerColor; // 헤더 색상을 배경색으로 사용
-                tagElement.style.color = tagTextColor; // 태그 텍스트 색상 적용
-                tagElement.innerHTML = `
-                    <span class="mr-2">${tag}</span>
-                    <button 
-                        class="text-red-500 hover:text-red-700" 
-                        onclick="removeTag('${tag}')"
-                    >×</button>
-                `;
-                tagList.appendChild(tagElement);
-                
-                // 미리보기 태그 - 태그 배경 색상 사용
-                const previewTagElement = document.createElement('span');
-                previewTagElement.className = 'tag-item';
-                previewTagElement.textContent = tag;
-                previewTagElement.style.backgroundColor = tagBgColor;
-                previewTagElement.style.color = tagTextColor;
-                
-                profileTags.appendChild(previewTagElement);
-            });
-            
-            // 설정 패널의 태그 목록 스타일 갱신
-            updateSettingTagStyles();
-        }
-
-        // 프로필 이미지 업데이트
-        function updateProfileImage() {
-            const imageUrl = document.getElementById('profileImageUrl').value.trim();
-            const profileImage = document.getElementById('profileImage');
-            const profileImagePlaceholder = document.getElementById('profileImagePlaceholder');
-            
-            if (imageUrl !== '') {
-                profileImage.src = imageUrl;
-                profileImage.classList.remove('hidden');
-                profileImagePlaceholder.classList.add('hidden');
-                
-                profileImage.onerror = function() {
-                    profileImage.classList.add('hidden');
-                    profileImagePlaceholder.classList.remove('hidden');
-                    showStatusMessage('이미지를 불러올 수 없습니다.', 'red');
-                };
-            } else {
-                profileImage.classList.add('hidden');
-                profileImagePlaceholder.classList.remove('hidden');
-            }
-        }
-
-        // 배경 이미지 업데이트
-        function updateBackgroundImage() {
-            const imageUrl = document.getElementById('backgroundImageUrl').value.trim();
-            const opacity = document.getElementById('backgroundOpacity').value;
-            const backgroundImageContainer = document.getElementById('backgroundImageContainer');
-            const backgroundImage = document.getElementById('backgroundImage');
-            const profileSection = document.getElementById('profileSection');
-            
-            if (imageUrl !== '') {
-                backgroundImage.src = imageUrl;
-                backgroundImageContainer.classList.remove('hidden');
-                backgroundImage.style.opacity = opacity / 100;
-                profileSection.classList.add('has-bg-image');
-                
-                backgroundImage.onerror = function() {
-                    backgroundImageContainer.classList.add('hidden');
-                    profileSection.classList.remove('has-bg-image');
-                    showStatusMessage('배경 이미지를 불러올 수 없습니다.', 'red');
-                };
-            } else {
-                backgroundImageContainer.classList.add('hidden');
-                profileSection.classList.remove('has-bg-image');
-            }
-        }
-
-        // 미리보기 업데이트
-        function updatePreview() {
-            // 헤더 제목 업데이트
-            updateHeaderTitle(document.getElementById('headerTitle').value);
-            
-            // 이미지 업데이트
-            updateProfileImage();
-            updateBackgroundImage();
-            
-            // 프로필 정보 업데이트
-            const fields = [
-                { inputId: 'nickname', outputId: 'profileName', defaultText: '닉네임 (@아이디)' },
-                { inputId: 'bio', outputId: 'profileBio', defaultText: '자신을 간단히 소개해주세요.' },
-                { inputId: 'age', outputId: 'profileAge', defaultText: '성인' },
-                { inputId: 'accountStatus', outputId: 'profileAccountStatus' },
-                { inputId: 'sinic', outputId: 'profileSinic' },
-                { inputId: 'speechType', outputId: 'profileSpeechType' },
-                { inputId: 'tweetStyle', outputId: 'profileTweetStyle' },
-                { inputId: 'playStyle', outputId: 'profilePlayStyle' },
-                { inputId: 'platform', outputId: 'profilePlatform' },
-                { inputId: 'cpPreference', outputId: 'profileCpPreference' }
-            ];
-            
-            fields.forEach(field => {
-                const value = document.getElementById(field.inputId).value;
-                const outputElement = document.getElementById(field.outputId);
-                if (outputElement) {
-                    outputElement.textContent = value || field.defaultText || '';
-                }
-            });
-            
-            // 팔로우 안내 특별 처리
-            const followTypeValue = document.getElementById('followType').value;
-            updateFollowGuide(followTypeValue ? followTypeValue.split(',').map(item => item.trim()) : []);
-            
-            // 태그 업데이트
-            renderTags();
-            
-            // 토글 버튼 스타일 업데이트
-            updateToggleButtonStyles();
-            
-            showStatusMessage('미리보기가 업데이트되었습니다!', 'blue');
-        }
-
-        // dom-to-image 라이브러리를 사용한 이미지 저장 함수
-        function downloadImage() {
-            const profileCard = document.getElementById('profileCard');
-            showStatusMessage("이미지 생성 중...", 'green');
-            
-            // dom-to-image 설정
-            const options = {
-                quality: 1.0,
-                bgcolor: '#fff',
-                style: {
-                  'font-smooth': 'always',
-                  'text-rendering': 'optimizeLegibility'
-                },
-                filter: (node) => {
-                    // 숨겨진 요소 제외
-                    return !node.classList || !node.classList.contains('hidden');
-                }
-            };
-            
-            // PNG 이미지 생성
-            domtoimage.toPng(profileCard, options)
-                .then(function(dataUrl) {
-                    // 다운로드 링크 생성
-                    const link = document.createElement('a');
-                    link.download = '자기소개표.png';
-                    link.href = dataUrl;
-                    link.click();
-                    
-                    showStatusMessage("이미지로 저장되었습니다!", 'green');
-                })
-                .catch(function(error) {
-                    console.error('이미지 생성 중 오류:', error);
-                    
-                    // 오류 발생 시 대체 방법 시도
-                    showStatusMessage("첫 번째 방법 실패, 대체 방법 시도 중...", 'blue');
-                    
-                    // 대체 방법: JPEG 형식으로 시도
-                    domtoimage.toJpeg(profileCard, { 
-                        quality: 0.95,
-                        bgcolor: '#ffffff'
-                    })
-                    .then(function(dataUrl) {
-                        const link = document.createElement('a');
-                        link.download = '자기소개표.jpg';
-                        link.href = dataUrl;
-                        link.click();
-                        
-                        showStatusMessage("JPEG 형식으로 저장되었습니다!", 'green');
-                    })
-                    .catch(function(finalError) {
-                        console.error('최종 이미지 생성 실패:', finalError);
-                        showStatusMessage("이미지 생성에 실패했습니다.", 'red');
-                    });
-                });
-        }
-
-        // 상태 메시지 표시
-        function showStatusMessage(message, color) {
-            const statusMessage = document.getElementById('statusMessage');
-            
-            let bgClass, textClass;
-            switch(color) {
-                case 'blue': bgClass = 'bg-blue-100'; textClass = 'text-blue-800'; break;
-                case 'green': bgClass = 'bg-green-100'; textClass = 'text-green-800'; break;
-                case 'red': bgClass = 'bg-red-100'; textClass = 'text-red-800'; break;
-                default: bgClass = 'bg-gray-100'; textClass = 'text-gray-800';
-            }
-            
-            statusMessage.className = `mt-1 p-2 rounded text-center ${bgClass} ${textClass}`;
-            statusMessage.textContent = message;
-            statusMessage.classList.remove('hidden');
-            
-            setTimeout(() => {
-                statusMessage.classList.add('hidden');
-            }, 3000);
-        }
+// 상태 메시지 표시
+function showStatusMessage(message, color) {
+    const statusMessage = document.getElementById('statusMessage');
+    
+    let bgClass, textClass;
+    switch(color) {
+        case 'blue': bgClass = 'bg-blue-100'; textClass = 'text-blue-800'; break;
+        case 'green': bgClass = 'bg-green-100'; textClass = 'text-green-800'; break;
+        case 'red': bgClass = 'bg-red-100'; textClass = 'text-red-800'; break;
+        default: bgClass = 'bg-gray-100'; textClass = 'text-gray-800';
+    }
+    
+    statusMessage.className = `mt-1 p-2 rounded text-center ${bgClass} ${textClass}`;
+    statusMessage.textContent = message;
+    statusMessage.classList.remove('hidden');
+    
+    setTimeout(() => {
+        statusMessage.classList.add('hidden');
+    }, 3000);
+}
     </script>
 </body>
 </html>
