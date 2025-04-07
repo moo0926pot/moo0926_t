@@ -513,4 +513,376 @@
                     </div>
                     
                     <!-- 태그 섹션 -->
-                    <div class="p-4 border border-gray-200 mx-4 my-
+                    <div class="p-4 border border-gray-200 mx-4 my-2 mb-4 rounded bg-white">
+                        <div class="text-gray-600 font-medium mb-2">선호 태그:</div>
+                        <div class="flex flex-wrap gap-2" id="profileTags">
+                            <!-- 태그 목록이 여기에 동적으로 추가됩니다 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 상태 및 설정 관리를 위한 객체
+        const appState = {
+            tags: ['남성', '여성', '기타', '인외', '수인', 'HL', 'BL', 'GL', 'NCP', '시뮬레이션', 'R18', '고어'],
+            defaultOptions: {
+                'accountStatus': ['블락', '블언블', '언팔'],
+                'speechType': ['무시가능', '직멘제외무시가능', '무시불가능'],
+                'tweetStyle': ['일상', 'RT', '타장르언급', '욕설', '우울', 'R18', '폭력성', '고어', '탐라대화', '마음요정', '인용대화'],
+                'playStyle': ['제작자', '소비자'],
+                'cpPreference': ['HL', 'BL', 'GL', 'ALL', 'NCP', '리버시블', '논리버시블']
+            },
+            colors: {
+                headerColor: '#d8b4fe',
+                tagColor: '#f3e8ff',
+                tagTextColor: '#6b21a8'
+            },
+            headerTitle: 'AI Chat 자기소개표'
+        };
+        
+        // 페이지 로드 시 초기화
+        window.onload = function() {
+            // 색상 선택기 초기화
+            initColorPickers();
+            
+            // 태그 렌더링
+            renderTags();
+            
+            // 기본 옵션 설정
+            initDefaultOptions();
+            
+            // 초기 미리보기 업데이트
+            updateProfile();
+        };
+        
+        // 섹션 토글 함수
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const toggleIcon = document.getElementById(sectionId.replace('Section', 'ToggleIcon'));
+            
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                toggleIcon.classList.add('rotate-180');
+            } else {
+                section.classList.add('hidden');
+                toggleIcon.classList.remove('rotate-180');
+            }
+        }
+        
+        // 헤더 제목 업데이트 함수
+        function updateHeaderTitle(title) {
+            appState.headerTitle = title;
+            document.getElementById('cardHeader').textContent = title;
+        }
+        
+        // 색상 선택기 초기화
+        function initColorPickers() {
+            // 헤더 색상 설정
+            updateColorPicker('headerColor', appState.colors.headerColor, (color) => {
+                document.getElementById('cardHeader').style.backgroundColor = color;
+            });
+            
+            // 태그 배경 색상 설정
+            updateColorPicker('tagColor', appState.colors.tagColor, renderTags);
+            
+            // 태그 텍스트 색상 설정
+            updateColorPicker('tagTextColor', appState.colors.tagTextColor, renderTags);
+        }
+        
+        // 색상 선택기 업데이트 함수
+        function updateColorPicker(id, value, callback) {
+            const picker = document.getElementById(id);
+            const text = document.getElementById(id + 'Text');
+            
+            picker.value = value;
+            text.textContent = value;
+            
+            picker.addEventListener('input', (e) => {
+                text.textContent = e.target.value;
+                appState.colors[id] = e.target.value;
+                if (callback) callback(e.target.value);
+            });
+        }
+        
+        // 기본 옵션 초기화
+        function initDefaultOptions() {
+            for (const [targetId, values] of Object.entries(appState.defaultOptions)) {
+                const hiddenInput = document.getElementById(targetId);
+                if (!hiddenInput) continue;
+                
+                // 저장된 값이 있으면 그것을 사용, 없으면 기본값의 처음 몇 개 사용
+                const selectedValues = values.slice(0, 2);
+                
+                // 버튼 활성화
+                selectedValues.forEach(value => {
+                    const button = document.querySelector(`button.option-btn[data-target="${targetId}"][data-value="${value}"]`);
+                    if (button) {
+                        button.classList.add('active');
+                    }
+                });
+                
+                // 히든 인풋 업데이트
+                hiddenInput.value = selectedValues.join(' ');
+            }
+        }
+        
+        // 옵션 토글 함수
+        function toggleOption(button) {
+            button.classList.toggle('active');
+            
+            const targetId = button.getAttribute('data-target');
+            const targetInput = document.getElementById(targetId);
+            
+            // 모든 활성화된 버튼의 값을 수집
+            const selectedButtons = document.querySelectorAll(`button.option-btn.active[data-target="${targetId}"]`);
+            const selectedValues = Array.from(selectedButtons).map(btn => btn.getAttribute('data-value'));
+            
+            // 히든 인풋에 값 설정
+            targetInput.value = selectedValues.join(' ');
+            
+            // 미리보기 업데이트
+            updateProfile();
+        }
+        
+        // 태그 렌더링 함수
+        function renderTags() {
+            const tagColor = appState.colors.tagColor;
+            const tagTextColor = appState.colors.tagTextColor;
+            
+            // 태그 관리 섹션 업데이트
+            const tagList = document.getElementById('tagList');
+            tagList.innerHTML = '';
+            
+            appState.tags.forEach((tag, index) => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'flex items-center bg-gray-200 px-2 py-1 rounded';
+                tagElement.innerHTML = `
+                    <span class="text-xs mr-1">#${tag}</span>
+                    <button onclick="removeTag(${index})" class="text-red-500 text-xs">×</button>
+                `;
+                tagList.appendChild(tagElement);
+            });
+            
+            // 프로필 태그 섹션 업데이트
+            const profileTags = document.getElementById('profileTags');
+            profileTags.innerHTML = '';
+            
+            appState.tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'px-2 py-1 rounded text-xs';
+                tagElement.style.backgroundColor = tagColor;
+                tagElement.style.color = tagTextColor;
+                tagElement.textContent = `#${tag}`;
+                profileTags.appendChild(tagElement);
+            });
+        }
+        
+        // 태그 추가
+        function addTag() {
+            const newTagInput = document.getElementById('newTag');
+            const newTag = newTagInput.value.trim();
+            
+            if (newTag !== '') {
+                appState.tags.push(newTag);
+                newTagInput.value = '';
+                renderTags();
+            }
+        }
+        
+        // 태그 삭제
+        function removeTag(index) {
+            appState.tags = appState.tags.filter((_, i) => i !== index);
+            renderTags();
+        }
+        
+        // 미리보기 업데이트 함수
+        function updatePreview() {
+            // 색상 업데이트
+            updateColorPicker('headerColor', document.getElementById('headerColor').value, (color) => {
+                document.getElementById('cardHeader').style.backgroundColor = color;
+            });
+            
+            updateColorPicker('tagColor', document.getElementById('tagColor').value, null);
+            updateColorPicker('tagTextColor', document.getElementById('tagTextColor').value, null);
+            
+            // 헤더 제목 업데이트
+            updateHeaderTitle(document.getElementById('headerTitle').value);
+            
+            // 이미지 업데이트
+            updateProfileImage();
+            updateBackgroundImage();
+            
+            // 프로필 정보 업데이트
+            updateProfile();
+            
+            // 태그 업데이트
+            renderTags();
+            
+            // 상태 메시지 표시
+            showStatusMessage('미리보기가 업데이트되었습니다!', 'blue');
+        }
+        
+        // 프로필 이미지 업데이트
+        function updateProfileImage() {
+            const imageUrl = document.getElementById('profileImageUrl').value.trim();
+            const profileImage = document.getElementById('profileImage');
+            const profileImagePlaceholder = document.getElementById('profileImagePlaceholder');
+            
+            if (imageUrl !== '') {
+                // 이미지 URL이 있을 경우 이미지 표시
+                profileImage.src = imageUrl;
+                profileImage.classList.remove('hidden');
+                profileImagePlaceholder.classList.add('hidden');
+                
+                // 이미지 로드 오류 처리
+                profileImage.onerror = function() {
+                    profileImage.classList.add('hidden');
+                    profileImagePlaceholder.classList.remove('hidden');
+                    showStatusMessage('이미지를 불러올 수 없습니다. 올바른 URL인지 확인해주세요.', 'red');
+                };
+            } else {
+                // 이미지 URL이 없을 경우 플레이스홀더 표시
+                profileImage.classList.add('hidden');
+                profileImagePlaceholder.classList.remove('hidden');
+            }
+        }
+        
+        // 배경 이미지 업데이트
+        function updateBackgroundImage() {
+            const imageUrl = document.getElementById('backgroundImageUrl').value.trim();
+            const opacity = document.getElementById('backgroundOpacity').value;
+            const backgroundImageContainer = document.getElementById('backgroundImageContainer');
+            const backgroundImage = document.getElementById('backgroundImage');
+            const profileSection = document.getElementById('profileSection');
+            
+            if (imageUrl !== '') {
+                // 이미지 URL이 있을 경우 배경 이미지 표시
+                backgroundImage.src = imageUrl;
+                backgroundImageContainer.classList.remove('hidden');
+                
+                // 투명도 적용
+                backgroundImage.style.opacity = opacity / 100;
+                
+                // 프로필 섹션에 배경 있음 클래스 추가
+                profileSection.classList.add('has-bg-image');
+                
+                // 이미지 로드 오류 처리
+                backgroundImage.onerror = function() {
+                    backgroundImageContainer.classList.add('hidden');
+                    profileSection.classList.remove('has-bg-image');
+                    showStatusMessage('배경 이미지를 불러올 수 없습니다. 올바른 URL인지 확인해주세요.', 'red');
+                };
+            } else {
+                // 이미지 URL이 없을 경우 배경 이미지 숨김
+                backgroundImageContainer.classList.add('hidden');
+                profileSection.classList.remove('has-bg-image');
+            }
+        }
+        
+        // 프로필 정보 업데이트
+        function updateProfile() {
+            // 텍스트 필드 값 가져오기
+            const nickname = document.getElementById('nickname').value;
+            const bio = document.getElementById('bio').value;
+            const sinic = document.getElementById('sinic').value;
+            const platform = document.getElementById('platform').value;
+            
+            // 옵션 값 가져오기
+            const accountStatus = document.getElementById('accountStatus').value;
+            const speechType = document.getElementById('speechType').value;
+            const tweetStyle = document.getElementById('tweetStyle').value;
+            const playStyle = document.getElementById('playStyle').value;
+            const cpPreference = document.getElementById('cpPreference').value;
+            
+            // 닉네임/아이디 업데이트
+            document.getElementById('profileName').textContent = nickname || '닉네임 (@아이디)';
+            
+            // 소개 업데이트
+            document.getElementById('profileBio').textContent = bio || '자신을 간단히 소개해주세요.';
+            
+            // 상세 정보 업데이트
+            document.getElementById('profileAccountStatus').textContent = accountStatus;
+            document.getElementById('profileSinic').textContent = sinic;
+            document.getElementById('profileSpeechType').textContent = speechType;
+            document.getElementById('profileTweetStyle').textContent = tweetStyle;
+            document.getElementById('profilePlayStyle').textContent = playStyle;
+            document.getElementById('profilePlatform').textContent = platform;
+            document.getElementById('profileCpPreference').textContent = cpPreference;
+        }
+        
+        // 이미지 저장 기능
+        function downloadImage() {
+            const profileCard = document.getElementById('profileCard');
+            
+            // 저장 버튼 클릭 시 로딩 메시지 표시
+            showStatusMessage("이미지 생성 중...", 'green');
+            
+            // html2canvas를 사용하여 프로필 카드를 이미지로 변환
+            html2canvas(profileCard, {
+                backgroundColor: "#ffffff",
+                scale: 2, // 고해상도를 위해 2배 스케일 적용
+                useCORS: true, // 외부 이미지 로드를 위한 CORS 활성화
+                logging: false
+            }).then(canvas => {
+                // 캔버스를 이미지로 변환
+                const image = canvas.toDataURL("image/png");
+                
+                // 다운로드 링크 생성
+                const downloadLink = document.createElement('a');
+                downloadLink.href = image;
+                downloadLink.download = "자기소개표.png";
+                
+                // 다운로드 트리거
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                // 성공 메시지 표시
+                showStatusMessage("자기소개표가 이미지로 저장되었습니다!", 'green');
+            }).catch(error => {
+                console.error("이미지 생성 중 오류 발생:", error);
+                showStatusMessage("이미지 생성 중 오류가 발생했습니다.", 'red');
+            });
+        }
+        
+        // 상태 메시지 표시 함수
+        function showStatusMessage(message, color) {
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // 색상에 따라 스타일 설정
+            let bgClass, textClass;
+            
+            switch(color) {
+                case 'blue':
+                    bgClass = 'bg-blue-100';
+                    textClass = 'text-blue-800';
+                    break;
+                case 'green':
+                    bgClass = 'bg-green-100';
+                    textClass = 'text-green-800';
+                    break;
+                case 'red':
+                    bgClass = 'bg-red-100';
+                    textClass = 'text-red-800';
+                    break;
+                default:
+                    bgClass = 'bg-gray-100';
+                    textClass = 'text-gray-800';
+            }
+            
+            // 기존 클래스 제거 및 새 클래스 추가
+            statusMessage.className = `mt-1 p-2 rounded text-center ${bgClass} ${textClass}`;
+            
+            // 메시지 설정 및 표시
+            statusMessage.textContent = message;
+            statusMessage.classList.remove('hidden');
+            
+            // 3초 후 메시지 숨기기
+            setTimeout(() => {
+                statusMessage.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
