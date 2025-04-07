@@ -19,6 +19,18 @@
             object-fit: cover;
             border-radius: 9999px;
         }
+        .profile-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .bg-container {
+            position: relative;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -66,7 +78,7 @@
                 </div>
             </div>
             
-            <!-- 프로필 이미지 URL 입력 필드 추가 -->
+            <!-- 프로필 이미지 URL 입력 필드 -->
             <div class="mb-6">
                 <h2 class="text-lg font-semibold mb-3">프로필 이미지</h2>
                 
@@ -82,27 +94,48 @@
                 </div>
             </div>
             
+            <!-- 배경 이미지 URL 및 투명도 입력 필드 추가 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">배경 이미지</h2>
+                
+                <div class="mb-3">
+                    <label class="block text-sm font-medium mb-1">배경 이미지 URL</label>
+                    <input 
+                        type="text" 
+                        id="backgroundImageUrl" 
+                        placeholder="https://example.com/background.jpg" 
+                        class="w-full p-2 border border-gray-300 rounded"
+                    >
+                    <p class="text-xs text-gray-500 mt-1">배경 이미지로 사용할 이미지의 URL을 입력하세요.</p>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="block text-sm font-medium mb-1">배경 투명도: <span id="opacityValue">50%</span></label>
+                    <input 
+                        type="range" 
+                        id="backgroundOpacity" 
+                        min="0" 
+                        max="100" 
+                        value="50" 
+                        class="w-full"
+                        oninput="document.getElementById('opacityValue').textContent = this.value + '%'"
+                    >
+                </div>
+            </div>
+            
             <div class="mb-6">
                 <h2 class="text-lg font-semibold mb-3">프로필 정보</h2>
                 
                 <div class="mb-3">
-                    <label class="block text-sm font-medium mb-1">닉네임</label>
+                    <label class="block text-sm font-medium mb-1">닉네임/아이디</label>
                     <input 
                         type="text" 
                         id="nickname" 
                         value="" 
+                        placeholder="닉네임 (@아이디)" 
                         class="w-full p-2 border border-gray-300 rounded"
                     >
-                </div>
-                
-                <div class="mb-3">
-                    <label class="block text-sm font-medium mb-1">아이디</label>
-                    <input 
-                        type="text" 
-                        id="username" 
-                        value="" 
-                        class="w-full p-2 border border-gray-300 rounded"
-                    >
+                    <p class="text-xs text-gray-500 mt-1">닉네임과 아이디를 함께 입력하세요. 예: 닉네임 (@아이디)</p>
                 </div>
                 
                 <div class="mb-3">
@@ -111,7 +144,8 @@
                         id="bio" 
                         class="w-full p-2 border border-gray-300 rounded"
                         rows="2"
-                    > 미성년자 성인 비공개 / FUB FREE: O X / 선팔로우 멘션 마음 RT 하시면 필로우합니다.</textarea>
+                        placeholder="자신을 간단히 소개해주세요."
+                    ></textarea>
                 </div>
             </div>
             
@@ -262,9 +296,14 @@
                     </div>
                     
                     <!-- 프로필 섹션 -->
-                    <div class="p-4 bg-white">
-                        <div class="flex items-start mb-2">
-                            <!-- 프로필 이미지 - 수정된 부분 -->
+                    <div class="p-4 bg-white bg-container" id="profileSection">
+                        <!-- 배경 이미지 - 새로 추가 -->
+                        <div id="backgroundImageContainer" class="hidden">
+                            <img id="backgroundImage" class="profile-bg" src="" alt="배경 이미지">
+                        </div>
+                        
+                        <div class="flex items-start mb-2 relative z-10">
+                            <!-- 프로필 이미지 -->
                             <div id="profileImageContainer" class="w-20 h-20 rounded-full mr-4 flex-shrink-0 flex items-center justify-center text-xs text-gray-400 bg-gray-200">
                                 <span id="profileImagePlaceholder">100 x 100</span>
                                 <img id="profileImage" class="profile-image hidden" src="" alt="프로필 이미지">
@@ -273,10 +312,10 @@
                             <!-- 기본 정보 -->
                             <div>
                                 <div class="font-bold text-gray-700 mb-1" id="profileName">
-                                    무우 (@moo_0926)
+                                    닉네임 (@아이디)
                                 </div>
                                 <div class="text-sm text-gray-600" id="profileBio">
-                                    성인 마감계 / FUB FREE: O X / 상업목적 매칭 RT 하시면 필로우합니다.
+                                    자신을 간단히 소개해주세요.
                                 </div>
                             </div>
                         </div>
@@ -353,6 +392,7 @@
             updateTagBackgroundColor(document.getElementById('tagColor').value);
             updateTagTextColor(document.getElementById('tagTextColor').value);
             updateProfileImage();
+            updateBackgroundImage();
             updateProfile();
             
             // 업데이트 완료 메시지 표시
@@ -387,6 +427,33 @@
                 // 이미지 URL이 없을 경우 플레이스홀더 표시
                 profileImage.classList.add('hidden');
                 profileImagePlaceholder.classList.remove('hidden');
+            }
+        }
+        
+        // 배경 이미지 업데이트 함수 추가
+        function updateBackgroundImage() {
+            const imageUrl = document.getElementById('backgroundImageUrl').value.trim();
+            const opacity = document.getElementById('backgroundOpacity').value;
+            const backgroundImageContainer = document.getElementById('backgroundImageContainer');
+            const backgroundImage = document.getElementById('backgroundImage');
+            const profileSection = document.getElementById('profileSection');
+            
+            if (imageUrl !== '') {
+                // 이미지 URL이 있을 경우 배경 이미지 표시
+                backgroundImage.src = imageUrl;
+                backgroundImageContainer.classList.remove('hidden');
+                
+                // 투명도 적용
+                backgroundImage.style.opacity = opacity / 100;
+                
+                // 이미지 로드 오류 처리
+                backgroundImage.onerror = function() {
+                    backgroundImageContainer.classList.add('hidden');
+                    alert('배경 이미지를 불러올 수 없습니다. 올바른 URL인지 확인해주세요.');
+                };
+            } else {
+                // 이미지 URL이 없을 경우 배경 이미지 숨김
+                backgroundImageContainer.classList.add('hidden');
             }
         }
         
@@ -465,7 +532,6 @@
         // 프로필 정보 업데이트
         function updateProfile() {
             const nickname = document.getElementById('nickname').value;
-            const username = document.getElementById('username').value;
             const bio = document.getElementById('bio').value;
             const accountStatus = document.getElementById('accountStatus').value;
             const sinic = document.getElementById('sinic').value;
@@ -475,21 +541,20 @@
             const platform = document.getElementById('platform').value;
             const cpPreference = document.getElementById('cpPreference').value;
             
-            // 닉네임과 유저네임이 둘 다 있는 경우
-            if (nickname && username) {
-                document.getElementById('profileName').textContent = `${nickname} (@${username})`;
-            } 
-            // 닉네임만 있는 경우
-            else if (nickname && !username) {
+            // 닉네임/아이디 업데이트
+            if (nickname) {
                 document.getElementById('profileName').textContent = nickname;
+            } else {
+                document.getElementById('profileName').textContent = '닉네임 (@아이디)';
             }
-            // 유저네임만 있는 경우
-            else if (!nickname && username) {
-                document.getElementById('profileName').textContent = `@${username}`;
-            }
-            // 둘 다 없는 경우 기본값 유지
             
-            document.getElementById('profileBio').textContent = bio;
+            // 소개 업데이트
+            if (bio) {
+                document.getElementById('profileBio').textContent = bio;
+            } else {
+                document.getElementById('profileBio').textContent = '자신을 간단히 소개해주세요.';
+            }
+            
             document.getElementById('profileAccountStatus').textContent = accountStatus;
             document.getElementById('profileSinic').textContent = sinic;
             document.getElementById('profileSpeechType').textContent = speechType;
@@ -538,11 +603,11 @@
             }).catch(error => {
                 console.error("이미지 생성 중 오류 발생:", error);
                 downloadMsg.textContent = "이미지 생성 중 오류가 발생했습니다.";
-                downloadMsg.className = "mt-3 p-2 bg-red-100 text-red-800 rounded text-center";
+                downloadMsg.className = "mt-1 p-2 bg-red-100 text-red-800 rounded text-center";
                 
                 setTimeout(() => {
                     downloadMsg.classList.add('hidden');
-                    downloadMsg.className = "mt-3 p-2 bg-green-100 text-green-800 rounded text-center hidden";
+                    downloadMsg.className = "mt-1 p-2 bg-green-100 text-green-800 rounded text-center hidden";
                 }, 3000);
             });
         }
