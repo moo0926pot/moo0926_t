@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>자기소개표 생성기</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2canvas 라이브러리 추가 -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-        /* 추가 스타일 */
+        /* 기본 레이아웃 스타일 */
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
+        
+        /* 프로필 이미지 스타일 */
         .profile-image {
             width: 100px;
             height: 100px;
@@ -20,42 +21,50 @@
             border-radius: 9999px;
         }
         
-        /* 배경 이미지 관련 스타일 수정 */
+        /* 배경 이미지 스타일 */
         #profileSection {
             position: relative;
-            overflow: hidden; /* 이미지가 영역을 벗어나지 않도록 */
+            overflow: hidden;
             min-height: 120px;
         }
-        #backgroundImageContainer {
+        
+        .bg-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* z-index 값 상향 조정 */
+            z-index: 0;
         }
+        
         .profile-bg {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+        
         .profile-content {
             position: relative;
-            z-index: 1; /* 내용이 배경 위에 표시되도록 */
-        }
-        .has-bg-image {
-            border: 1px dashed #e9d5ff;
-            background-color: rgba(250, 245, 255, 0.3); /* 더 투명하게 조정 */
+            z-index: 1;
         }
         
+        .has-bg-image {
+            border: 1px dashed #e9d5ff;
+            background-color: rgba(250, 245, 255, 0.3);
+        }
+        
+        /* 버튼 스타일 */
         .option-btn {
             transition: all 0.2s;
         }
+        
         .option-btn.active {
             background-color: #d8b4fe;
             color: white;
             border-color: #d8b4fe;
         }
+        
+        /* 반응형 레이아웃 */
         @media (min-width: 768px) {
             .container {
                 min-height: 100vh;
@@ -79,50 +88,35 @@
         <div class="w-full md:w-1/3 p-4 bg-white border-r border-gray-200 overflow-y-auto">
             <h1 class="text-xl font-bold mb-6">자기소개표 생성기</h1>
             
+            <!-- 테마 색상 설정 -->
             <div class="mb-6">
                 <h2 class="text-lg font-semibold mb-3">테마 색상 설정</h2>
-                
                 <div class="grid grid-cols-3 gap-0 mb-4">
                     <div class="flex flex-col items-center">
                         <label class="block text-sm font-medium mb-1 text-center">헤더 색상</label>
-                        <input 
-                            type="color" 
-                            id="headerColor" 
-                            value="#d8b4fe" 
-                            class="h-10 w-16"
-                        >
+                        <input type="color" id="headerColor" value="#d8b4fe" class="h-10 w-16">
                         <span class="text-xs text-gray-500 mt-1" id="headerColorText">#d8b4fe</span>
                     </div>
                     
                     <div class="flex flex-col items-center">
                         <label class="block text-sm font-medium mb-1 text-center">태그 배경 색상</label>
-                        <input 
-                            type="color" 
-                            id="tagColor" 
-                            value="#f3e8ff" 
-                            class="h-10 w-16"
-                        >
+                        <input type="color" id="tagColor" value="#f3e8ff" class="h-10 w-16">
                         <span class="text-xs text-gray-500 mt-1" id="tagColorText">#f3e8ff</span>
                     </div>
                     
                     <div class="flex flex-col items-center">
                         <label class="block text-sm font-medium mb-1 text-center">태그 텍스트 색상</label>
-                        <input 
-                            type="color" 
-                            id="tagTextColor" 
-                            value="#6b21a8" 
-                            class="h-10 w-16"
-                        >
+                        <input type="color" id="tagTextColor" value="#6b21a8" class="h-10 w-16">
                         <span class="text-xs text-gray-500 mt-1" id="tagTextColorText">#6b21a8</span>
                     </div>
                 </div>
             </div>
             
-            <!-- 프로필/배경 이미지 통합 섹션 (접기/펴기 가능) -->
+            <!-- 이미지 설정 섹션 -->
             <div class="mb-6">
                 <button 
                     class="flex items-center justify-between w-full text-lg font-semibold mb-3 bg-gray-100 p-2 rounded"
-                    onclick="toggleImageSection()"
+                    onclick="toggleSection('imageSection')"
                 >
                     <span>이미지 설정</span>
                     <svg id="imageToggleIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transform transition-transform">
@@ -134,7 +128,6 @@
                     <!-- 프로필 이미지 설정 -->
                     <div class="mb-4 p-3 border border-gray-200 rounded">
                         <h3 class="text-md font-medium mb-2">프로필 이미지</h3>
-                        
                         <div class="mb-3">
                             <label class="block text-sm font-medium mb-1">이미지 URL</label>
                             <input 
@@ -150,7 +143,6 @@
                     <!-- 배경 이미지 설정 -->
                     <div class="p-3 border border-gray-200 rounded">
                         <h3 class="text-md font-medium mb-2">배경 이미지</h3>
-                        
                         <div class="mb-3">
                             <label class="block text-sm font-medium mb-1">배경 이미지 URL</label>
                             <input 
@@ -179,6 +171,7 @@
                 </div>
             </div>
             
+            <!-- 프로필 정보 섹션 -->
             <div class="mb-6">
                 <h2 class="text-lg font-semibold mb-3">프로필 정보</h2>
                 
@@ -187,7 +180,6 @@
                     <input 
                         type="text" 
                         id="nickname" 
-                        value="" 
                         placeholder="닉네임 (@아이디)" 
                         class="w-full p-2 border border-gray-300 rounded"
                     >
@@ -205,311 +197,158 @@
                 </div>
             </div>
             
-            <!-- 상세 정보 섹션을 토글 버튼 방식으로 변경 -->
+            <!-- 상세 정보 섹션 -->
             <div class="mb-6">
-                <h2 class="text-lg font-semibold mb-3">상세 정보</h2>
+                <button 
+                    class="flex items-center justify-between w-full text-lg font-semibold mb-3 bg-gray-100 p-2 rounded"
+                    onclick="toggleSection('detailSection')"
+                >
+                    <span>상세 정보</span>
+                    <svg id="detailToggleIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transform transition-transform">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
                 
-                <!-- 관계 정리 -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">관계 정리</label>
-                    <div class="flex flex-wrap gap-2" id="accountStatusOptions">
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="accountStatus" 
-                            data-value="블락"
-                            onclick="toggleOption(this)"
-                        >
-                            블락
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="accountStatus" 
-                            data-value="블언블"
-                            onclick="toggleOption(this)"
-                        >
-                            블언블
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="accountStatus" 
-                            data-value="언팔"
-                            onclick="toggleOption(this)"
-                        >
-                            언팔
-                        </button>
+                <div id="detailSection">
+                    <!-- 관계 정리 -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">관계 정리</label>
+                        <div class="flex flex-wrap gap-2" id="accountStatusOptions">
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="accountStatus" 
+                                data-value="블락"
+                                onclick="toggleOption(this)"
+                            >
+                                블락
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="accountStatus" 
+                                data-value="블언블"
+                                onclick="toggleOption(this)"
+                            >
+                                블언블
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="accountStatus" 
+                                data-value="언팔"
+                                onclick="toggleOption(this)"
+                            >
+                                언팔
+                            </button>
+                        </div>
+                        <input type="hidden" id="accountStatus" value="">
                     </div>
-                    <input type="hidden" id="accountStatus" value="">
-                </div>
-                
-                <!-- 지뢰 (텍스트 입력으로 변경) -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">지뢰</label>
-                    <input 
-                        type="text" 
-                        id="sinic" 
-                        value="" 
-                        placeholder="지뢰가 되는 요소를 입력하세요" 
-                        class="w-full p-2 border border-gray-300 rounded"
-                        oninput="updateProfile()"
-                    >
-                </div>
-                
-                <!-- 지뢰 대응 -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">지뢰 대응</label>
-                    <div class="flex flex-wrap gap-2" id="speechTypeOptions">
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="speechType" 
-                            data-value="무시가능"
-                            onclick="toggleOption(this)"
+                    
+                    <!-- 지뢰 (텍스트 입력) -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">지뢰</label>
+                        <input 
+                            type="text" 
+                            id="sinic" 
+                            placeholder="지뢰가 되는 요소를 입력하세요" 
+                            class="w-full p-2 border border-gray-300 rounded"
                         >
-                            무시가능
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="speechType" 
-                            data-value="직멘제외무시가능"
-                            onclick="toggleOption(this)"
-                        >
-                            직멘제외무시가능
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="speechType" 
-                            data-value="무시불가능"
-                            onclick="toggleOption(this)"
-                        >
-                            무시불가능
-                        </button>
                     </div>
-                    <input type="hidden" id="speechType" value="">
-                </div>
-                
-                <!-- 트윗 성향 -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">트윗 성향</label>
-                    <div class="flex flex-wrap gap-2" id="tweetStyleOptions">
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="일상"
-                            onclick="toggleOption(this)"
-                        >
-                            일상
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="RT"
-                            onclick="toggleOption(this)"
-                        >
-                            RT
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="타장르언급"
-                            onclick="toggleOption(this)"
-                        >
-                            타장르언급
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="욕설"
-                            onclick="toggleOption(this)"
-                        >
-                            욕설
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="우울"
-                            onclick="toggleOption(this)"
-                        >
-                            우울
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="R18"
-                            onclick="toggleOption(this)"
-                        >
-                            R18
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="폭력성"
-                            onclick="toggleOption(this)"
-                        >
-                            폭력성
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="고어"
-                            onclick="toggleOption(this)"
-                        >
-                            고어
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="탐라대화"
-                            onclick="toggleOption(this)"
-                        >
-                            탐라대화
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="마음요정"
-                            onclick="toggleOption(this)"
-                        >
-                            마음요정
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="tweetStyle" 
-                            data-value="인용대화"
-                            onclick="toggleOption(this)"
-                        >
-                            인용대화
-                        </button>
+                    
+                    <!-- 지뢰 대응 -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">지뢰 대응</label>
+                        <div class="flex flex-wrap gap-2" id="speechTypeOptions">
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="speechType" 
+                                data-value="무시가능"
+                                onclick="toggleOption(this)"
+                            >
+                                무시가능
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="speechType" 
+                                data-value="직멘제외무시가능"
+                                onclick="toggleOption(this)"
+                            >
+                                직멘제외무시가능
+                            </button>
+                            <button 
+                                type="button" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                data-target="speechType" 
+                                data-value="무시불가능"
+                                onclick="toggleOption(this)"
+                            >
+                                무시불가능
+                            </button>
+                        </div>
+                        <input type="hidden" id="speechType" value="">
                     </div>
-                    <input type="hidden" id="tweetStyle" value="">
-                </div>
-                
-                <!-- 성향 -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">성향</label>
-                    <div class="flex flex-wrap gap-2" id="playStyleOptions">
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="playStyle" 
-                            data-value="제작자"
-                            onclick="toggleOption(this)"
-                        >
-                            제작자
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="playStyle" 
-                            data-value="소비자"
-                            onclick="toggleOption(this)"
-                        >
-                            소비자
-                        </button>
+                    
+                    <!-- 트윗 성향 -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">트윗 성향</label>
+                        <div class="flex flex-wrap gap-2" id="tweetStyleOptions">
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="일상" onclick="toggleOption(this)">일상</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="RT" onclick="toggleOption(this)">RT</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="타장르언급" onclick="toggleOption(this)">타장르언급</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="욕설" onclick="toggleOption(this)">욕설</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="우울" onclick="toggleOption(this)">우울</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="R18" onclick="toggleOption(this)">R18</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="폭력성" onclick="toggleOption(this)">폭력성</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="고어" onclick="toggleOption(this)">고어</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="탐라대화" onclick="toggleOption(this)">탐라대화</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="마음요정" onclick="toggleOption(this)">마음요정</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="인용대화" onclick="toggleOption(this)">인용대화</button>
+                        </div>
+                        <input type="hidden" id="tweetStyle" value="">
                     </div>
-                    <input type="hidden" id="playStyle" value="">
-                </div>
-                
-                <!-- 플랫폼 (텍스트 입력으로 변경) -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">플랫폼</label>
-                    <input 
-                        type="text" 
-                        id="platform" 
-                        value="" 
-                        placeholder="이용 중인 플랫폼을 입력하세요" 
-                        class="w-full p-2 border border-gray-300 rounded"
-                        oninput="updateProfile()"
-                    >
-                </div>
-                
-                <!-- CP 성향 -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">CP 성향</label>
-                    <div class="flex flex-wrap gap-2" id="cpPreferenceOptions">
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="cpPreference" 
-                            data-value="HL"
-                            onclick="toggleOption(this)"
-                        >
-                            HL
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="cpPreference" 
-                            data-value="BL"
-                            onclick="toggleOption(this)"
-                        >
-                            BL
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="cpPreference" 
-                            data-value="GL"
-                            onclick="toggleOption(this)"
-                        >
-                            GL
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="cpPreference" 
-                            data-value="ALL"
-                            onclick="toggleOption(this)"
-                        >
-                            ALL
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="cpPreference" 
-                            data-value="NCP"
-                            onclick="toggleOption(this)"
-                        >
-                            NCP
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="cpPreference" 
-                            data-value="리버시블"
-                            onclick="toggleOption(this)"
-                        >
-                            리버시블
-                        </button>
-                        <button 
-                            type="button" 
-                            class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
-                            data-target="cpPreference" 
-                            data-value="논리버시블"
-                            onclick="toggleOption(this)"
-                        >
-                            논리버시블
-                        </button>
+                    
+                    <!-- 성향 -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">성향</label>
+                        <div class="flex flex-wrap gap-2" id="playStyleOptions">
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="playStyle" data-value="제작자" onclick="toggleOption(this)">제작자</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="playStyle" data-value="소비자" onclick="toggleOption(this)">소비자</button>
+                        </div>
+                        <input type="hidden" id="playStyle" value="">
                     </div>
-                    <input type="hidden" id="cpPreference" value="">
+                    
+                    <!-- 플랫폼 (텍스트 입력) -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">플랫폼</label>
+                        <input 
+                            type="text" 
+                            id="platform" 
+                            placeholder="이용 중인 플랫폼을 입력하세요" 
+                            class="w-full p-2 border border-gray-300 rounded"
+                        >
+                    </div>
+                    
+                    <!-- CP 성향 -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-2">CP 성향</label>
+                        <div class="flex flex-wrap gap-2" id="cpPreferenceOptions">
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="HL" onclick="toggleOption(this)">HL</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="BL" onclick="toggleOption(this)">BL</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="GL" onclick="toggleOption(this)">GL</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="ALL" onclick="toggleOption(this)">ALL</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="NCP" onclick="toggleOption(this)">NCP</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="리버시블" onclick="toggleOption(this)">리버시블</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="논리버시블" onclick="toggleOption(this)">논리버시블</button>
+                        </div>
+                        <input type="hidden" id="cpPreference" value="">
+                    </div>
                 </div>
             </div>
             
+            <!-- 태그 관리 섹션 -->
             <div class="mb-6">
                 <h2 class="text-lg font-semibold mb-3">태그 관리</h2>
                 
@@ -533,9 +372,8 @@
                 </div>
             </div>
             
-            <!-- 버튼 영역 - 수정된 부분 -->
+            <!-- 버튼 영역 -->
             <div class="flex flex-col gap-2 mb-4">
-                <!-- 미리보기 업데이트 버튼을 먼저 배치 -->
                 <button 
                     onclick="updatePreview()" 
                     class="w-full bg-blue-500 text-white py-2 px-4 rounded flex items-center justify-center"
@@ -548,7 +386,6 @@
                     미리보기 업데이트
                 </button>
                 
-                <!-- 이미지로 저장하기 버튼을 그 다음에 배치 -->
                 <button 
                     onclick="downloadImage()" 
                     class="w-full bg-purple-600 text-white py-2 px-4 rounded flex items-center justify-center"
@@ -562,13 +399,7 @@
             </div>
             
             <!-- 메시지 영역 -->
-            <div id="updateMsg" class="mt-1 p-2 bg-blue-100 text-blue-800 rounded text-center hidden">
-                미리보기가 업데이트되었습니다!
-            </div>
-            
-            <div id="downloadMsg" class="mt-1 p-2 bg-green-100 text-green-800 rounded text-center hidden">
-                자기소개표가 이미지로 저장되었습니다!
-            </div>
+            <div id="statusMessage" class="mt-1 p-2 rounded text-center hidden"></div>
         </div>
         
         <!-- 미리보기 패널 -->
@@ -584,8 +415,8 @@
                     
                     <!-- 프로필 섹션 -->
                     <div class="p-4 bg-white" id="profileSection">
-                        <!-- 배경 이미지 - 위치 변경 -->
-                        <div id="backgroundImageContainer" class="hidden">
+                        <!-- 배경 이미지 -->
+                        <div id="backgroundImageContainer" class="bg-container hidden">
                             <img id="backgroundImage" class="profile-bg" src="" alt="배경 이미지">
                         </div>
                         
@@ -612,7 +443,7 @@
                     <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
                         <div class="grid grid-cols-3 gap-2 mb-2">
                             <div class="text-gray-600 font-medium">계정 정리:</div>
-                            <div class="col-span-2 text-gray-800" id="profileAccountStatus">블락 블언블 언멘</div>
+                            <div class="col-span-2 text-gray-800" id="profileAccountStatus"></div>
                         </div>
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
@@ -622,17 +453,17 @@
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
                             <div class="text-gray-600 font-medium">지칭 대응:</div>
-                            <div class="col-span-2 text-gray-800" id="profileSpeechType">무시기능 적매채입무시기능 무시불가능</div>
+                            <div class="col-span-2 text-gray-800" id="profileSpeechType"></div>
                         </div>
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
                             <div class="text-gray-600 font-medium">트윗 성향:</div>
-                            <div class="col-span-2 text-gray-800" id="profileTweetStyle">일상 RT 다섯엄지 보석 우웅 R18 픽웃션 고어 담배외부 바경외스 자살묘사</div>
+                            <div class="col-span-2 text-gray-800" id="profileTweetStyle"></div>
                         </div>
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
                             <div class="text-gray-600 font-medium">놀이 성향:</div>
-                            <div class="col-span-2 text-gray-800" id="profilePlayStyle">재작자 소비자</div>
+                            <div class="col-span-2 text-gray-800" id="profilePlayStyle"></div>
                         </div>
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
@@ -642,7 +473,7 @@
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
                             <div class="text-gray-600 font-medium">CP 성향:</div>
-                            <div class="col-span-2 text-gray-800" id="profileCpPreference">HL BL GL ALL NCP 미니서스 돈괴비자봄</div>
+                            <div class="col-span-2 text-gray-800" id="profileCpPreference"></div>
                         </div>
                     </div>
                     
@@ -653,44 +484,98 @@
                             <!-- 태그 목록이 여기에 동적으로 추가됩니다 -->
                         </div>
                     </div>
-                    
-                    <!-- 푸터 -->
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 초기 태그 목록
-        const initialTags = ['남성', '여성', '가타', '안이', '수인', 'HL', 'BL', 'GL', 'NCP', '시로메이션', 'R18', '과몸', '라인', '유배', '맨몸치', '과아이돌'];
-        let tags = [...initialTags];
-        
-        // 페이지 로드 시 초기화
-        window.onload = function() {
-            updateHeaderColor('#d8b4fe');
-            updateTagBackgroundColor('#f3e8ff');
-            updateTagTextColor('#6b21a8');
-            renderTags();
-            
-            // 각 섹션의 기본값 설정 (지뢰와 플랫폼 제외)
-            const defaultValues = {
+        // 상태 및 설정 관리를 위한 객체
+        const appState = {
+            tags: ['남성', '여성', '가타', '안이', '수인', 'HL', 'BL', 'GL', 'NCP', '시로메이션', 'R18', '과몸', '라인', '유배', '맨몸치', '과아이돌'],
+            defaultOptions: {
                 'accountStatus': ['블락', '블언블', '언팔'],
                 'speechType': ['무시가능', '직멘제외무시가능', '무시불가능'],
                 'tweetStyle': ['일상', 'RT', '타장르언급', '욕설', '우울', 'R18', '폭력성', '고어', '탐라대화', '마음요정', '인용대화'],
                 'playStyle': ['제작자', '소비자'],
                 'cpPreference': ['HL', 'BL', 'GL', 'ALL', 'NCP', '리버시블', '논리버시블']
-            };
+            },
+            colors: {
+                headerColor: '#d8b4fe',
+                tagColor: '#f3e8ff',
+                tagTextColor: '#6b21a8'
+            }
+        };
+        
+        // 페이지 로드 시 초기화
+        window.onload = function() {
+            // 색상 선택기 초기화
+            initColorPickers();
             
-            // 각 섹션의 기본값을 활성화
-            for (const [targetId, values] of Object.entries(defaultValues)) {
+            // 태그 렌더링
+            renderTags();
+            
+            // 기본 옵션 설정
+            initDefaultOptions();
+            
+            // 초기 미리보기 업데이트
+            updateProfile();
+        };
+        
+        // 섹션 토글 함수
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const toggleIcon = document.getElementById(sectionId.replace('Section', 'ToggleIcon'));
+            
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                toggleIcon.classList.add('rotate-180');
+            } else {
+                section.classList.add('hidden');
+                toggleIcon.classList.remove('rotate-180');
+            }
+        }
+        
+        // 색상 선택기 초기화
+        function initColorPickers() {
+            // 헤더 색상 설정
+            updateColorPicker('headerColor', appState.colors.headerColor, (color) => {
+                document.getElementById('cardHeader').style.backgroundColor = color;
+            });
+            
+            // 태그 배경 색상 설정
+            updateColorPicker('tagColor', appState.colors.tagColor, renderTags);
+            
+            // 태그 텍스트 색상 설정
+            updateColorPicker('tagTextColor', appState.colors.tagTextColor, renderTags);
+        }
+        
+        // 색상 선택기 업데이트 함수
+        function updateColorPicker(id, value, callback) {
+            const picker = document.getElementById(id);
+            const text = document.getElementById(id + 'Text');
+            
+            picker.value = value;
+            text.textContent = value;
+            
+            picker.addEventListener('input', (e) => {
+                text.textContent = e.target.value;
+                appState.colors[id] = e.target.value;
+                if (callback) callback(e.target.value);
+            });
+        }
+        
+        // 기본 옵션 초기화
+        function initDefaultOptions() {
+            for (const [targetId, values] of Object.entries(appState.defaultOptions)) {
                 const hiddenInput = document.getElementById(targetId);
                 if (!hiddenInput) continue;
                 
                 // 저장된 값이 있으면 그것을 사용, 없으면 기본값의 처음 몇 개 사용
-                const savedValues = hiddenInput.value ? hiddenInput.value.split(' ') : values.slice(0, 2);
+                const selectedValues = values.slice(0, 2);
                 
                 // 버튼 활성화
-                savedValues.forEach(value => {
+                selectedValues.forEach(value => {
                     const button = document.querySelector(`button.option-btn[data-target="${targetId}"][data-value="${value}"]`);
                     if (button) {
                         button.classList.add('active');
@@ -698,24 +583,7 @@
                 });
                 
                 // 히든 인풋 업데이트
-                hiddenInput.value = savedValues.join(' ');
-            }
-            
-            // 초기 미리보기 업데이트
-            updateProfile();
-        };
-        
-        // 이미지 섹션 접기/펴기 토글 함수
-        function toggleImageSection() {
-            const imageSection = document.getElementById('imageSection');
-            const imageToggleIcon = document.getElementById('imageToggleIcon');
-            
-            if (imageSection.classList.contains('hidden')) {
-                imageSection.classList.remove('hidden');
-                imageToggleIcon.classList.add('rotate-180');
-            } else {
-                imageSection.classList.add('hidden');
-                imageToggleIcon.classList.remove('rotate-180');
+                hiddenInput.value = selectedValues.join(' ');
             }
         }
         
@@ -737,23 +605,79 @@
             updateProfile();
         }
         
-        // 미리보기 업데이트
+        // 태그 렌더링 함수
+        function renderTags() {
+            const tagColor = appState.colors.tagColor;
+            const tagTextColor = appState.colors.tagTextColor;
+            
+            // 태그 관리 섹션 업데이트
+            const tagList = document.getElementById('tagList');
+            tagList.innerHTML = '';
+            
+            appState.tags.forEach((tag, index) => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'flex items-center bg-gray-200 px-2 py-1 rounded';
+                tagElement.innerHTML = `
+                    <span class="text-xs mr-1">#${tag}</span>
+                    <button onclick="removeTag(${index})" class="text-red-500 text-xs">×</button>
+                `;
+                tagList.appendChild(tagElement);
+            });
+            
+            // 프로필 태그 섹션 업데이트
+            const profileTags = document.getElementById('profileTags');
+            profileTags.innerHTML = '';
+            
+            appState.tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'px-2 py-1 rounded text-xs';
+                tagElement.style.backgroundColor = tagColor;
+                tagElement.style.color = tagTextColor;
+                tagElement.textContent = `#${tag}`;
+                profileTags.appendChild(tagElement);
+            });
+        }
+        
+        // 태그 추가
+        function addTag() {
+            const newTagInput = document.getElementById('newTag');
+            const newTag = newTagInput.value.trim();
+            
+            if (newTag !== '') {
+                appState.tags.push(newTag);
+                newTagInput.value = '';
+                renderTags();
+            }
+        }
+        
+        // 태그 삭제
+        function removeTag(index) {
+            appState.tags = appState.tags.filter((_, i) => i !== index);
+            renderTags();
+        }
+        
+        // 미리보기 업데이트 함수
         function updatePreview() {
-            updateHeaderColor(document.getElementById('headerColor').value);
-            updateTagBackgroundColor(document.getElementById('tagColor').value);
-            updateTagTextColor(document.getElementById('tagTextColor').value);
+            // 색상 업데이트
+            updateColorPicker('headerColor', document.getElementById('headerColor').value, (color) => {
+                document.getElementById('cardHeader').style.backgroundColor = color;
+            });
+            
+            updateColorPicker('tagColor', document.getElementById('tagColor').value, null);
+            updateColorPicker('tagTextColor', document.getElementById('tagTextColor').value, null);
+            
+            // 이미지 업데이트
             updateProfileImage();
             updateBackgroundImage();
+            
+            // 프로필 정보 업데이트
             updateProfile();
             
-            // 업데이트 완료 메시지 표시
-            const updateMsg = document.getElementById('updateMsg');
-            updateMsg.classList.remove('hidden');
+            // 태그 업데이트
+            renderTags();
             
-            // 3초 후 메시지 숨기기
-            setTimeout(() => {
-                updateMsg.classList.add('hidden');
-            }, 3000);
+            // 상태 메시지 표시
+            showStatusMessage('미리보기가 업데이트되었습니다!', 'blue');
         }
         
         // 프로필 이미지 업데이트
@@ -772,7 +696,7 @@
                 profileImage.onerror = function() {
                     profileImage.classList.add('hidden');
                     profileImagePlaceholder.classList.remove('hidden');
-                    alert('이미지를 불러올 수 없습니다. 올바른 URL인지 확인해주세요.');
+                    showStatusMessage('이미지를 불러올 수 없습니다. 올바른 URL인지 확인해주세요.', 'red');
                 };
             } else {
                 // 이미지 URL이 없을 경우 플레이스홀더 표시
@@ -781,15 +705,13 @@
             }
         }
         
-        // 배경 이미지 업데이트 함수 수정
+        // 배경 이미지 업데이트
         function updateBackgroundImage() {
             const imageUrl = document.getElementById('backgroundImageUrl').value.trim();
             const opacity = document.getElementById('backgroundOpacity').value;
             const backgroundImageContainer = document.getElementById('backgroundImageContainer');
             const backgroundImage = document.getElementById('backgroundImage');
             const profileSection = document.getElementById('profileSection');
-            
-            console.log("배경 이미지 URL:", imageUrl); // 디버깅용
             
             if (imageUrl !== '') {
                 // 이미지 URL이 있을 경우 배경 이미지 표시
@@ -802,17 +724,11 @@
                 // 프로필 섹션에 배경 있음 클래스 추가
                 profileSection.classList.add('has-bg-image');
                 
-                // 이미지 로드 성공 시 로그
-                backgroundImage.onload = function() {
-                    console.log("배경 이미지 로드 성공");
-                };
-                
                 // 이미지 로드 오류 처리
                 backgroundImage.onerror = function() {
-                    console.log("배경 이미지 로드 실패");
                     backgroundImageContainer.classList.add('hidden');
                     profileSection.classList.remove('has-bg-image');
-                    alert('배경 이미지를 불러올 수 없습니다. 올바른 URL인지 확인해주세요.');
+                    showStatusMessage('배경 이미지를 불러올 수 없습니다. 올바른 URL인지 확인해주세요.', 'red');
                 };
             } else {
                 // 이미지 URL이 없을 경우 배경 이미지 숨김
@@ -821,104 +737,28 @@
             }
         }
         
-        // 헤더 색상 업데이트
-        function updateHeaderColor(color) {
-            document.getElementById('headerColor').value = color;
-            document.getElementById('headerColorText').textContent = color;
-            document.getElementById('cardHeader').style.backgroundColor = color;
-        }
-        
-        // 태그 배경 색상 업데이트
-        function updateTagBackgroundColor(color) {
-            document.getElementById('tagColor').value = color;
-            document.getElementById('tagColorText').textContent = color;
-            renderTags();
-        }
-        
-        // 태그 텍스트 색상 업데이트
-        function updateTagTextColor(color) {
-            document.getElementById('tagTextColor').value = color;
-            document.getElementById('tagTextColorText').textContent = color;
-            renderTags();
-        }
-        
-        // 태그 렌더링
-        function renderTags() {
-            // 태그 관리 섹션 업데이트
-            const tagList = document.getElementById('tagList');
-            tagList.innerHTML = '';
-            
-            tags.forEach((tag, index) => {
-                const tagElement = document.createElement('div');
-                tagElement.className = 'flex items-center bg-gray-200 px-2 py-1 rounded';
-                tagElement.innerHTML = `
-                    <span class="text-xs mr-1">#${tag}</span>
-                    <button onclick="removeTag(${index})" class="text-red-500 text-xs">×</button>
-                `;
-                tagList.appendChild(tagElement);
-            });
-            
-            // 프로필 태그 섹션 업데이트
-            const profileTags = document.getElementById('profileTags');
-            profileTags.innerHTML = '';
-            
-            const tagColor = document.getElementById('tagColor').value;
-            const tagTextColor = document.getElementById('tagTextColor').value;
-            
-            tags.forEach(tag => {
-                const tagElement = document.createElement('span');
-                tagElement.className = 'px-2 py-1 rounded text-xs';
-                tagElement.style.backgroundColor = tagColor;
-                tagElement.style.color = tagTextColor;
-                tagElement.textContent = `#${tag}`;
-                profileTags.appendChild(tagElement);
-            });
-        }
-        
-        // 태그 추가
-        function addTag() {
-            const newTagInput = document.getElementById('newTag');
-            const newTag = newTagInput.value.trim();
-            
-            if (newTag !== '') {
-                tags.push(newTag);
-                newTagInput.value = '';
-                renderTags();
-            }
-        }
-        
-        // 태그 삭제
-        function removeTag(index) {
-            tags = tags.filter((_, i) => i !== index);
-            renderTags();
-        }
-        
         // 프로필 정보 업데이트
         function updateProfile() {
+            // 텍스트 필드 값 가져오기
             const nickname = document.getElementById('nickname').value;
             const bio = document.getElementById('bio').value;
-            const accountStatus = document.getElementById('accountStatus').value;
             const sinic = document.getElementById('sinic').value;
+            const platform = document.getElementById('platform').value;
+            
+            // 옵션 값 가져오기
+            const accountStatus = document.getElementById('accountStatus').value;
             const speechType = document.getElementById('speechType').value;
             const tweetStyle = document.getElementById('tweetStyle').value;
             const playStyle = document.getElementById('playStyle').value;
-            const platform = document.getElementById('platform').value;
             const cpPreference = document.getElementById('cpPreference').value;
             
             // 닉네임/아이디 업데이트
-            if (nickname) {
-                document.getElementById('profileName').textContent = nickname;
-            } else {
-                document.getElementById('profileName').textContent = '닉네임 (@아이디)';
-            }
+            document.getElementById('profileName').textContent = nickname || '닉네임 (@아이디)';
             
             // 소개 업데이트
-            if (bio) {
-                document.getElementById('profileBio').textContent = bio;
-            } else {
-                document.getElementById('profileBio').textContent = '자신을 간단히 소개해주세요.';
-            }
+            document.getElementById('profileBio').textContent = bio || '자신을 간단히 소개해주세요.';
             
+            // 상세 정보 업데이트
             document.getElementById('profileAccountStatus').textContent = accountStatus;
             document.getElementById('profileSinic').textContent = sinic;
             document.getElementById('profileSpeechType').textContent = speechType;
@@ -928,14 +768,12 @@
             document.getElementById('profileCpPreference').textContent = cpPreference;
         }
         
-        // 이미지 저장 기능 (html2canvas 라이브러리 사용)
+        // 이미지 저장 기능
         function downloadImage() {
-            const downloadMsg = document.getElementById('downloadMsg');
             const profileCard = document.getElementById('profileCard');
             
             // 저장 버튼 클릭 시 로딩 메시지 표시
-            downloadMsg.textContent = "이미지 생성 중...";
-            downloadMsg.classList.remove('hidden');
+            showStatusMessage("이미지 생성 중...", 'green');
             
             // html2canvas를 사용하여 프로필 카드를 이미지로 변환
             html2canvas(profileCard, {
@@ -958,23 +796,49 @@
                 document.body.removeChild(downloadLink);
                 
                 // 성공 메시지 표시
-                downloadMsg.textContent = "자기소개표가 이미지로 저장되었습니다!";
-                
-                // 메시지 3초 후 숨기기
-                setTimeout(() => {
-                    downloadMsg.classList.add('hidden');
-                }, 3000);
+                showStatusMessage("자기소개표가 이미지로 저장되었습니다!", 'green');
             }).catch(error => {
                 console.error("이미지 생성 중 오류 발생:", error);
-                downloadMsg.textContent = "이미지 생성 중 오류가 발생했습니다.";
-                downloadMsg.className = "mt-1 p-2 bg-red-100 text-red-800 rounded text-center";
-                
-                setTimeout(() => {
-                    downloadMsg.classList.add('hidden');
-                    downloadMsg.className = "mt-1 p-2 bg-green-100 text-green-800 rounded text-center hidden";
-                }, 3000);
+                showStatusMessage("이미지 생성 중 오류가 발생했습니다.", 'red');
             });
         }
+        
+        // 상태 메시지 표시 함수
+        function showStatusMessage(message, color) {
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // 색상에 따라 스타일 설정
+            let bgClass, textClass;
+            
+            switch(color) {
+                case 'blue':
+                    bgClass = 'bg-blue-100';
+                    textClass = 'text-blue-800';
+                    break;
+                case 'green':
+                    bgClass = 'bg-green-100';
+                    textClass = 'text-green-800';
+                    break;
+                case 'red':
+                    bgClass = 'bg-red-100';
+                    textClass = 'text-red-800';
+                    break;
+                default:
+                    bgClass = 'bg-gray-100';
+                    textClass = 'text-gray-800';
+            }
+            
+            // 기존 클래스 제거 및 새 클래스 추가
+            statusMessage.className = `mt-1 p-2 rounded text-center ${bgClass} ${textClass}`;
+            
+            // 메시지 설정 및 표시
+            statusMessage.textContent = message;
+            statusMessage.classList.remove('hidden');
+            
+            // 3초 후 메시지 숨기기
+            setTimeout(() => {
+                statusMessage.classList.add('hidden');
+            }, 3000);
+        }
     </script>
-</body>
-</html>
+    
