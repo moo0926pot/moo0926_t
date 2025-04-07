@@ -38,7 +38,6 @@
                             id="headerColor" 
                             value="#d8b4fe" 
                             class="h-10 w-16"
-                            onchange="updateHeaderColor(this.value)"
                         >
                         <span class="text-xs text-gray-500 mt-1" id="headerColorText">#d8b4fe</span>
                     </div>
@@ -50,7 +49,6 @@
                             id="tagColor" 
                             value="#f3e8ff" 
                             class="h-10 w-16"
-                            onchange="updateTagBackgroundColor(this.value)"
                         >
                         <span class="text-xs text-gray-500 mt-1" id="tagColorText">#f3e8ff</span>
                     </div>
@@ -62,7 +60,6 @@
                             id="tagTextColor" 
                             value="#6b21a8" 
                             class="h-10 w-16"
-                            onchange="updateTagTextColor(this.value)"
                         >
                         <span class="text-xs text-gray-500 mt-1" id="tagTextColorText">#6b21a8</span>
                     </div>
@@ -79,7 +76,6 @@
                         type="text" 
                         id="profileImageUrl" 
                         placeholder="https://example.com/image.jpg" 
-                        oninput="updateProfileImage()"
                         class="w-full p-2 border border-gray-300 rounded"
                     >
                     <p class="text-xs text-gray-500 mt-1">프로필 이미지로 사용할 이미지의 URL을 입력하세요.</p>
@@ -95,18 +91,25 @@
                         type="text" 
                         id="nickname" 
                         value="" 
-                        oninput="updateProfile()"
                         class="w-full p-2 border border-gray-300 rounded"
                     >
                 </div>
-              
+                
+                <div class="mb-3">
+                    <label class="block text-sm font-medium mb-1">아이디</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        value="" 
+                        class="w-full p-2 border border-gray-300 rounded"
+                    >
+                </div>
                 
                 <div class="mb-3">
                     <label class="block text-sm font-medium mb-1">소개</label>
                     <textarea 
                         id="bio" 
-                        oninput="updateProfile()"
-                       class="w-full p-2 border border-gray-300 rounded"
+                        class="w-full p-2 border border-gray-300 rounded"
                         rows="2"
                     > 미성년자 성인 비공개 / FUB FREE: O X / 선팔로우 멘션 마음 RT 하시면 필로우합니다.</textarea>
                 </div>
@@ -121,7 +124,6 @@
                         type="text" 
                         id="accountStatus" 
                         value="블락 블언블 언팔" 
-                        oninput="updateProfile()"
                         class="w-full p-2 border border-gray-300 rounded"
                     >
                 </div>
@@ -132,7 +134,6 @@
                         type="text" 
                         id="sinic" 
                         value="" 
-                        oninput="updateProfile()"
                         class="w-full p-2 border border-gray-300 rounded"
                     >
                 </div>
@@ -143,7 +144,6 @@
                         type="text" 
                         id="speechType" 
                         value="무시가능 직멘제외무시가능 무시불가능" 
-                        oninput="updateProfile()"
                         class="w-full p-2 border border-gray-300 rounded"
                     >
                 </div>
@@ -154,7 +154,6 @@
                         type="text" 
                         id="tweetStyle" 
                         value="일상 RT 타장르언급 욕설 우울 R18 폭력성 고어 탐라대화 마음요정 인용대화" 
-                        oninput="updateProfile()"
                         class="w-full p-2 border border-gray-300 rounded"
                     >
                 </div>
@@ -165,7 +164,6 @@
                         type="text" 
                         id="playStyle" 
                         value="재작자 소비자" 
-                        oninput="updateProfile()"
                         class="w-full p-2 border border-gray-300 rounded"
                     >
                 </div>
@@ -176,7 +174,6 @@
                         type="text" 
                         id="platform" 
                         value="" 
-                        oninput="updateProfile()"
                         class="w-full p-2 border border-gray-300 rounded"
                     >
                 </div>
@@ -187,7 +184,6 @@
                         type="text" 
                         id="cpPreference" 
                         value="HL BL GL ALL NCP 리버시블 논리버시블" 
-                        oninput="updateProfile()"
                         class="w-full p-2 border border-gray-300 rounded"
                     >
                 </div>
@@ -216,18 +212,37 @@
                 </div>
             </div>
             
-            <button 
-                onclick="downloadImage()" 
-                class="w-full bg-purple-600 text-white py-2 px-4 rounded flex items-center justify-center"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
-                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
-                    <circle cx="12" cy="13" r="3"></circle>
-                </svg>
-                이미지로 저장하기
-            </button>
+            <div class="flex gap-2 mb-2">
+                <button 
+                    onclick="downloadImage()" 
+                    class="w-full bg-purple-600 text-white py-2 px-4 rounded flex items-center justify-center"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                        <circle cx="12" cy="13" r="3"></circle>
+                    </svg>
+                    이미지로 저장하기
+                </button>
+                
+                <!-- 미리보기 업데이트 버튼 추가 -->
+                <button 
+                    onclick="updatePreview()" 
+                    class="w-full bg-blue-500 text-white py-2 px-4 rounded flex items-center justify-center"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    미리보기 업데이트
+                </button>
+            </div>
             
-            <div id="downloadMsg" class="mt-3 p-2 bg-green-100 text-green-800 rounded text-center hidden">
+            <div id="updateMsg" class="mt-1 p-2 bg-blue-100 text-blue-800 rounded text-center hidden">
+                미리보기가 업데이트되었습니다!
+            </div>
+            
+            <div id="downloadMsg" class="mt-1 p-2 bg-green-100 text-green-800 rounded text-center hidden">
                 자기소개표가 이미지로 저장되었습니다!
             </div>
         </div>
@@ -267,17 +282,17 @@
                     <!-- 상세 정보 섹션 -->
                     <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
                         <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">계정 정라:</div>
+                            <div class="text-gray-600 font-medium">계정 정리:</div>
                             <div class="col-span-2 text-gray-800" id="profileAccountStatus">블락 블언블 언멘</div>
                         </div>
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">시닉:</div>
+                            <div class="text-gray-600 font-medium">지뢰:</div>
                             <div class="col-span-2 text-gray-800" id="profileSinic"></div>
                         </div>
                         
                         <div class="grid grid-cols-3 gap-2 mb-2">
-                            <div class="text-gray-600 font-medium">지칭 대사:</div>
+                            <div class="text-gray-600 font-medium">지칭 대응:</div>
                             <div class="col-span-2 text-gray-800" id="profileSpeechType">무시기능 적매채입무시기능 무시불가능</div>
                         </div>
                         
@@ -311,7 +326,6 @@
                     </div>
                     
                     <!-- 푸터 -->
-                    </div>
                 </div>
             </div>
         </div>
@@ -328,8 +342,25 @@
             updateTagBackgroundColor('#f3e8ff');
             updateTagTextColor('#6b21a8');
             renderTags();
-            updateProfile();
         };
+        
+        // 미리보기 업데이트
+        function updatePreview() {
+            updateHeaderColor(document.getElementById('headerColor').value);
+            updateTagBackgroundColor(document.getElementById('tagColor').value);
+            updateTagTextColor(document.getElementById('tagTextColor').value);
+            updateProfileImage();
+            updateProfile();
+            
+            // 업데이트 완료 메시지 표시
+            const updateMsg = document.getElementById('updateMsg');
+            updateMsg.classList.remove('hidden');
+            
+            // 3초 후 메시지 숨기기
+            setTimeout(() => {
+                updateMsg.classList.add('hidden');
+            }, 3000);
+        }
         
         // 프로필 이미지 업데이트
         function updateProfileImage() {
@@ -441,7 +472,20 @@
             const platform = document.getElementById('platform').value;
             const cpPreference = document.getElementById('cpPreference').value;
             
-            document.getElementById('profileName').textContent = `${nickname} (@${username})`;
+            // 닉네임과 유저네임이 둘 다 있는 경우
+            if (nickname && username) {
+                document.getElementById('profileName').textContent = `${nickname} (@${username})`;
+            } 
+            // 닉네임만 있는 경우
+            else if (nickname && !username) {
+                document.getElementById('profileName').textContent = nickname;
+            }
+            // 유저네임만 있는 경우
+            else if (!nickname && username) {
+                document.getElementById('profileName').textContent = `@${username}`;
+            }
+            // 둘 다 없는 경우 기본값 유지
+            
             document.getElementById('profileBio').textContent = bio;
             document.getElementById('profileAccountStatus').textContent = accountStatus;
             document.getElementById('profileSinic').textContent = sinic;
