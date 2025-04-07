@@ -294,6 +294,29 @@
                 </div>
             </div>
             
+<!-- 텍스트 크기 설정 - 새로 추가 -->
+<div class="setting-item mt-4">
+    <label class="setting-label">텍스트 크기 조절</label>
+    <div class="flex items-center gap-2">
+        <input 
+            type="range" 
+            id="textSizeSlider" 
+            min="70" 
+            max="130" 
+            value="100" 
+            class="flex-grow"
+            oninput="updateTextSize(this.value); document.getElementById('textSizeInput').value = this.value + '%';"
+        >
+        <input 
+            type="text" 
+            id="textSizeInput" 
+            value="100%" 
+            class="w-16 p-1 border border-gray-300 rounded text-center"
+            onchange="updateTextSizeFromInput(this.value)"
+        >
+    </div>
+</div>
+
             <!-- 이미지 설정 섹션 -->
             <div class="mb-6">
                 <button 
@@ -769,13 +792,50 @@ const appState = {
         tagTextColor: '#8C6717'       // 태그 텍스트 색상 변경
     },
     headerTitle: 'AI Chat 자기소개표'
+    textSize: '100'  // 텍스트 크기 (퍼센트) - 이 줄 추가
 };
+
+// 텍스트 크기 설정 관련 함수
+
+// 슬라이더로 텍스트 크기 업데이트
+function updateTextSize(sizePercent) {
+    const size = parseInt(sizePercent) / 100;
+    
+    // 프로필 카드에 텍스트 크기 스케일 적용
+    const profileCard = document.getElementById('profileCard');
+    profileCard.style.fontSize = `${size}rem`;
+    
+    // 현재 텍스트 크기를 appState에 저장
+    appState.textSize = sizePercent;
+}
+
+// 입력 필드로 텍스트 크기 업데이트
+function updateTextSizeFromInput(value) {
+    // '%' 기호 제거하고 숫자만 추출
+    let sizePercent = parseInt(value.replace('%', ''));
+    
+    // 범위 제한 (70% ~ 130%)
+    if (isNaN(sizePercent)) sizePercent = 100;
+    sizePercent = Math.min(130, Math.max(70, sizePercent));
+    
+    // 슬라이더 값 업데이트
+    document.getElementById('textSizeSlider').value = sizePercent;
+    
+    // 입력 필드 값 형식화
+    document.getElementById('textSizeInput').value = sizePercent + '%';
+    
+    // 텍스트 크기 적용
+    updateTextSize(sizePercent);
+}
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
     initColorPickers();
     renderTags();
     
+    // 텍스트 크기 초기화 (페이지 로드 시) - 이 줄 추가
+    updateTextSize(appState.textSize);
+
     // 프로필 및 배경 이미지 URL 설정 후 자동 로드
     document.getElementById('profileImageUrl').value = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkGHVkHhOalIBxWeuKVuV-8T4hGPXVBIgTNw&s";
     document.getElementById('backgroundImageUrl').value = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkGHVkHhOalIBxWeuKVuV-8T4hGPXVBIgTNw&s";
