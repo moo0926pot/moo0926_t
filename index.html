@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>자기소개표 생성기</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2canvas 대신 dom-to-image 라이브러리 사용 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <style>
         /* 태그 관련 스타일 */
@@ -75,15 +74,15 @@
             background-color: rgba(250, 245, 255, 0.3);
         }
         
-        /* 버튼 스타일 */
+        /* 버튼 스타일 - 토글 활성화 색상 변경 */
         .option-btn {
             transition: all 0.2s;
         }
         
         .option-btn.active {
-            background-color: #d8b4fe;
-            color: white;
-            border-color: #d8b4fe;
+            background-color: #F7F4CB;
+            color: #8C6717;
+            border-color: #F7F4CB;
         }
         
         /* 상세 정보 영역 */
@@ -110,6 +109,16 @@
                 position: sticky;
                 top: 20px;
             }
+        }
+        
+        /* 태그 추가 및 이미지 저장 버튼 색상 변경 */
+        .custom-button {
+            background-color: #E0B664;
+            color: white;
+        }
+        
+        .custom-button:hover {
+            background-color: #d5a649;
         }
     </style>
 </head>
@@ -148,7 +157,7 @@
                                 <input 
                                     type="color" 
                                     id="headerTextColor" 
-                                    value="#FFFFFF" 
+                                    value="#8C6717" 
                                     class="h-full px-2 py-1 border border-gray-300 rounded-r"
                                     oninput="updateHeaderTextColor(this.value)"
                                 >
@@ -159,17 +168,17 @@
                     <div class="grid grid-cols-3 gap-0 mb-4">
                         <div class="flex flex-col items-center">
                             <label class="block text-sm font-medium mb-1 text-center">헤더 색상</label>
-                            <input type="color" id="headerColor" value="#d8b4fe" class="h-10 w-16">
+                            <input type="color" id="headerColor" value="#F7F4CB" class="h-10 w-16">
                         </div>
                         
                         <div class="flex flex-col items-center">
                             <label class="block text-sm font-medium mb-1 text-center">태그 배경 색상</label>
-                            <input type="color" id="tagColor" value="#f3e8ff" class="h-10 w-16">
+                            <input type="color" id="tagColor" value="#EFDAB1" class="h-10 w-16">
                         </div>
                         
                         <div class="flex flex-col items-center">
                             <label class="block text-sm font-medium mb-1 text-center">태그 텍스트 색상</label>
-                            <input type="color" id="tagTextColor" value="#6b21a8" class="h-10 w-16">
+                            <input type="color" id="tagTextColor" value="#8C6717" class="h-10 w-16">
                         </div>
                     </div>
                 </div>
@@ -248,7 +257,7 @@
                 </div>
             </div>
             
-            <!-- 상세 정보 섹션 - 기존 토글 버튼 방식 -->
+            <!-- 상세 정보 섹션 - 기존 토글 버튼 방식 - 모든 토글 기본 선택됨 -->
             <div class="mb-6">
                 <button 
                     class="flex items-center justify-between w-full text-lg font-semibold mb-3 bg-gray-100 p-2 rounded"
@@ -267,7 +276,7 @@
                         <div class="flex flex-wrap gap-2" id="accountStatusOptions">
                             <button 
                                 type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
                                 data-target="accountStatus" 
                                 data-value="블락"
                                 onclick="toggleOption(this)"
@@ -276,7 +285,7 @@
                             </button>
                             <button 
                                 type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
                                 data-target="accountStatus" 
                                 data-value="블언블"
                                 onclick="toggleOption(this)"
@@ -285,7 +294,7 @@
                             </button>
                             <button 
                                 type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
                                 data-target="accountStatus" 
                                 data-value="언팔"
                                 onclick="toggleOption(this)"
@@ -293,7 +302,7 @@
                                 언팔
                             </button>
                         </div>
-                        <input type="hidden" id="accountStatus" value="">
+                        <input type="hidden" id="accountStatus" value="블락,블언블,언팔">
                     </div>
                     
                     <!-- 지뢰 (텍스트 입력) -->
@@ -313,7 +322,7 @@
                         <div class="flex flex-wrap gap-2" id="speechTypeOptions">
                             <button 
                                 type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
                                 data-target="speechType" 
                                 data-value="무시가능"
                                 onclick="toggleOption(this)"
@@ -322,7 +331,7 @@
                             </button>
                             <button 
                                 type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
                                 data-target="speechType" 
                                 data-value="직멘제외무시가능"
                                 onclick="toggleOption(this)"
@@ -331,7 +340,7 @@
                             </button>
                             <button 
                                 type="button" 
-                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" 
+                                class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" 
                                 data-target="speechType" 
                                 data-value="무시불가능"
                                 onclick="toggleOption(this)"
@@ -339,36 +348,36 @@
                                 무시불가능
                             </button>
                         </div>
-                        <input type="hidden" id="speechType" value="">
+                        <input type="hidden" id="speechType" value="무시가능,직멘제외무시가능,무시불가능">
                     </div>
                     
                     <!-- 트윗 성향 -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium mb-2">트윗 성향</label>
                         <div class="flex flex-wrap gap-2" id="tweetStyleOptions">
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="일상" onclick="toggleOption(this)">일상</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="RT" onclick="toggleOption(this)">RT</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="타장르언급" onclick="toggleOption(this)">타장르언급</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="욕설" onclick="toggleOption(this)">욕설</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="우울" onclick="toggleOption(this)">우울</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="R18" onclick="toggleOption(this)">R18</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="폭력성" onclick="toggleOption(this)">폭력성</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="고어" onclick="toggleOption(this)">고어</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="탐라대화" onclick="toggleOption(this)">탐라대화</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="마음요정" onclick="toggleOption(this)">마음요정</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="tweetStyle" data-value="인용대화" onclick="toggleOption(this)">인용대화</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="일상" onclick="toggleOption(this)">일상</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="RT" onclick="toggleOption(this)">RT</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="타장르언급" onclick="toggleOption(this)">타장르언급</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="욕설" onclick="toggleOption(this)">욕설</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="우울" onclick="toggleOption(this)">우울</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="R18" onclick="toggleOption(this)">R18</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="폭력성" onclick="toggleOption(this)">폭력성</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="고어" onclick="toggleOption(this)">고어</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="탐라대화" onclick="toggleOption(this)">탐라대화</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="마음요정" onclick="toggleOption(this)">마음요정</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="tweetStyle" data-value="인용대화" onclick="toggleOption(this)">인용대화</button>
                         </div>
-                        <input type="hidden" id="tweetStyle" value="">
+                        <input type="hidden" id="tweetStyle" value="일상,RT,타장르언급,욕설,우울,R18,폭력성,고어,탐라대화,마음요정,인용대화">
                     </div>
                     
                     <!-- 성향 -->
                     <div class="mb-4">
                         <label class="block text-sm font-medium mb-2">성향</label>
                         <div class="flex flex-wrap gap-2" id="playStyleOptions">
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="playStyle" data-value="제작자" onclick="toggleOption(this)">제작자</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="playStyle" data-value="소비자" onclick="toggleOption(this)">소비자</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="playStyle" data-value="제작자" onclick="toggleOption(this)">제작자</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="playStyle" data-value="소비자" onclick="toggleOption(this)">소비자</button>
                         </div>
-                        <input type="hidden" id="playStyle" value="">
+                        <input type="hidden" id="playStyle" value="제작자,소비자">
                     </div>
                     
                     <!-- 플랫폼 (텍스트 입력) -->
@@ -386,15 +395,15 @@
                     <div class="mb-4">
                         <label class="block text-sm font-medium mb-2">CP 성향</label>
                         <div class="flex flex-wrap gap-2" id="cpPreferenceOptions">
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="HL" onclick="toggleOption(this)">HL</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="BL" onclick="toggleOption(this)">BL</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="GL" onclick="toggleOption(this)">GL</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="ALL" onclick="toggleOption(this)">ALL</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="NCP" onclick="toggleOption(this)">NCP</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="리버시블" onclick="toggleOption(this)">리버시블</button>
-                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn" data-target="cpPreference" data-value="논리버시블" onclick="toggleOption(this)">논리버시블</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="cpPreference" data-value="HL" onclick="toggleOption(this)">HL</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="cpPreference" data-value="BL" onclick="toggleOption(this)">BL</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="cpPreference" data-value="GL" onclick="toggleOption(this)">GL</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="cpPreference" data-value="ALL" onclick="toggleOption(this)">ALL</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="cpPreference" data-value="NCP" onclick="toggleOption(this)">NCP</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="cpPreference" data-value="리버시블" onclick="toggleOption(this)">리버시블</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded text-sm option-btn active" data-target="cpPreference" data-value="논리버시블" onclick="toggleOption(this)">논리버시블</button>
                         </div>
-                        <input type="hidden" id="cpPreference" value="">
+                        <input type="hidden" id="cpPreference" value="HL,BL,GL,ALL,NCP,리버시블,논리버시블">
                     </div>
                 </div>
             </div>
@@ -412,7 +421,7 @@
                     >
                     <button 
                         onclick="addTag()" 
-                        class="bg-purple-500 text-white px-3 py-2 rounded-r"
+                        class="custom-button px-3 py-2 rounded-r"
                     >
                         추가
                     </button>
@@ -434,7 +443,7 @@
                 
                 <button 
                     onclick="downloadImage()" 
-                    class="flex-1 bg-purple-600 text-white py-2 px-4 rounded"
+                    class="flex-1 custom-button py-2 px-4 rounded"
                 >
                     이미지로 저장
                 </button>
@@ -451,7 +460,7 @@
                 
                 <div class="rounded-lg overflow-hidden shadow-lg bg-white sticky top-4" id="profileCard">
                     <!-- 헤더 부분 -->
-                    <div class="p-3 text-white text-xl font-bold" id="cardHeader">
+                    <div class="p-3 text-xl font-bold" id="cardHeader" style="background-color: #F7F4CB; color: #8C6717;">
                         AI Chat 자기소개표
                     </div>
                     
@@ -485,7 +494,7 @@
                     <div class="p-4 border border-gray-200 mx-4 my-2 rounded bg-white">
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">관계 정리:</div>
-                            <div class="text-gray-800" id="profileAccountStatus"></div>
+                            <div class="text-gray-800" id="profileAccountStatus">블락,블언블,언팔</div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
@@ -495,17 +504,17 @@
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">지뢰 대응:</div>
-                            <div class="text-gray-800" id="profileSpeechType"></div>
+                            <div class="text-gray-800" id="profileSpeechType">무시가능,직멘제외무시가능,무시불가능</div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">트윗 성향:</div>
-                            <div class="text-gray-800" id="profileTweetStyle"></div>
+                            <div class="text-gray-800" id="profileTweetStyle">일상,RT,타장르언급,욕설,우울,R18,폭력성,고어,탐라대화,마음요정,인용대화</div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">성향:</div>
-                            <div class="text-gray-800" id="profilePlayStyle"></div>
+                            <div class="text-gray-800" id="profilePlayStyle">제작자,소비자</div>
                         </div>
                         
                         <div class="grid info-grid gap-2 mb-2">
@@ -515,7 +524,7 @@
                         
                         <div class="grid info-grid gap-2 mb-2">
                             <div class="text-gray-600 font-medium info-label">CP 성향:</div>
-                            <div class="text-gray-800" id="profileCpPreference"></div>
+                            <div class="text-gray-800" id="profileCpPreference">HL,BL,GL,ALL,NCP,리버시블,논리버시블</div>
                         </div>
                     </div>
                     
@@ -536,10 +545,10 @@
         const appState = {
             tags: ['남성', '여성', '기타', '인외', '수인', 'HL', 'BL', 'GL', 'NCP', '시뮬레이션', 'R18', '고어'],
             colors: {
-                headerColor: '#d8b4fe',
-                headerTextColor: '#FFFFFF',
-                tagColor: '#f3e8ff',
-                tagTextColor: '#6b21a8'
+                headerColor: '#F7F4CB',       // 헤더 색상 변경
+                headerTextColor: '#8C6717',   // 헤더 텍스트 색상 변경
+                tagColor: '#EFDAB1',          // 태그 배경 색상 변경
+                tagTextColor: '#8C6717'       // 태그 텍스트 색상 변경
             },
             headerTitle: 'AI Chat 자기소개표'
         };
@@ -582,6 +591,9 @@
                     backgroundImage.style.opacity = this.value / 100;
                 }
             });
+            
+            // 미리보기 초기 업데이트 (기본값 표시)
+            updatePreview();
         });
 
         // 옵션 토글 함수 (여러 선택 가능)
@@ -795,9 +807,6 @@
         function downloadImage() {
             const profileCard = document.getElementById('profileCard');
             showStatusMessage("이미지 생성 중...", 'green');
-            
-            // 원본 높이를 저장 (결과 이미지가 잘리지 않도록)
-            const originalHeight = profileCard.offsetHeight;
             
             // dom-to-image 설정
             const options = {
