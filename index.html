@@ -111,35 +111,48 @@
                 
                 <div id="themeSection">
                     <!-- 헤더 제목 설정 추가 -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">헤더 제목</label>
-                        <input 
-                            type="text" 
-                            id="headerTitle" 
-                            value="AI Chat 자기소개표" 
-                            placeholder="헤더 제목을 입력하세요" 
-                            class="w-full p-2 border border-gray-300 rounded mb-2"
-                            oninput="updateHeaderTitle(this.value)"
-                        >
-                    </div>
+<div class="mb-4">
+    <label class="block text-sm font-medium mb-1">헤더 제목</label>
+    <div class="flex">
+        <input 
+            type="text" 
+            id="headerTitle" 
+            value="AI Chat 자기소개표" 
+            placeholder="헤더 제목을 입력하세요" 
+            class="flex-grow p-2 border border-gray-300 rounded-l"
+            oninput="updateHeaderTitle(this.value)"
+        >
+        <div class="flex flex-col items-center">
+            <label class="block text-sm font-medium mb-1 text-center sr-only">헤더 텍스트 색상</label>
+            <input 
+                type="color" 
+                id="headerTextColor" 
+                value="#FFFFFF" 
+                class="h-full px-2 py-1 border border-gray-300 rounded-r"
+                oninput="updateHeaderTextColor(this.value)"
+            >
+        </div>
+    </div>
+    <p class="text-xs text-gray-500 mt-1">헤더 제목과 텍스트 색상을 설정하세요.</p>
+</div>
                     
                     <div class="grid grid-cols-3 gap-0 mb-4">
                         <div class="flex flex-col items-center">
                             <label class="block text-sm font-medium mb-1 text-center">헤더 색상</label>
                             <input type="color" id="headerColor" value="#d8b4fe" class="h-10 w-16">
-                            <span class="text-xs text-gray-500 mt-1" id="headerColorText">#d8b4fe</span>
+                            <span class="text-xs text-gray-500 mt-1" id="headerColorText">#FFFe</span>
                         </div>
                         
                         <div class="flex flex-col items-center">
                             <label class="block text-sm font-medium mb-1 text-center">태그 배경 색상</label>
                             <input type="color" id="tagColor" value="#f3e8ff" class="h-10 w-16">
-                            <span class="text-xs text-gray-500 mt-1" id="tagColorText">#f3e8ff</span>
+                            <span class="text-xs text-gray-500 mt-1" id="tagColorText">#E0E0E0</span>
                         </div>
                         
                         <div class="flex flex-col items-center">
                             <label class="block text-sm font-medium mb-1 text-center">태그 텍스트 색상</label>
                             <input type="color" id="tagTextColor" value="#6b21a8" class="h-10 w-16">
-                            <span class="text-xs text-gray-500 mt-1" id="tagTextColorText">#6b21a8</span>
+                            <span class="text-xs text-gray-500 mt-1" id="tagTextColorText">#000</span>
                         </div>
                     </div>
                 </div>
@@ -185,10 +198,12 @@
                                 placeholder="https://example.com/background.jpg" 
                                 class="w-full p-2 border border-gray-300 rounded"
                             >
-                            <p class="text-xs text-gray-500 mt-1">배경 이미지로 사용할 이미지의 URL을 입력하세요.</p>
-                            <p class="text-xs text-blue-500 mt-1">※ 배경 이미지는 프로필 섹션 전체에 적용됩니다.</p>
+                            <p class="text-xs text-gray-500 mt-1">배경 이미지로 사용할 이미지의 URL을 입력하세
+요.</p>
                             <p class="text-xs text-gray-500 mt-1">이미지 권장 사이즈: 800x120~250px(가로x세로)</p>
                         </div>
+                            <p class="text-xs text-blue-500 mt-1">※ 배경 이미지는 프로필 섹션 전체에 적용됩니다.</p>
+
                         
                         <div class="mb-3">
                             <label class="block text-sm font-medium mb-1">배경 투명도: <span id="opacityValue">50%</span></label>
